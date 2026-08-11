@@ -134,7 +134,7 @@ export function Topbar({ onMenuToggle, onSearchOpen, showSearch, showProfile }: 
                   {PLANO_MAP[role] || 'Visitante'}
                 </span>
               </div>
-              <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)', transition: 'transform 0.2s', transform: profileOpen ? 'rotate(180deg)' : 'none' }}></i>
+              <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.924rem', color: 'var(--color-text-muted)', transition: 'transform 0.2s', transform: profileOpen ? 'rotate(180deg)' : 'none' }}></i>
             </div>
             {profileOpen && (
               <div className="profile-dropdown is-visible" style={{ position: 'absolute', top: '100%', right: 0, marginTop: '4px' }} onClick={(e) => e.stopPropagation()}>

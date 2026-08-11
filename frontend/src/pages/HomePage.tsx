@@ -263,7 +263,8 @@ export function HomePage() {
           <div className="courses-slider-wrapper">
             <button className="trilhas-next-btn" onClick={() => {
               const slider = document.getElementById('trilhasSlider');
-              slider?.scrollBy({ left: 260, behavior: 'smooth' });
+              const step = window.innerWidth <= 480 ? (slider?.clientWidth || 260) : 260;
+              slider?.scrollBy({ left: step, behavior: 'smooth' });
             }}>
               <i className="fa-solid fa-chevron-right"></i>
             </button>
@@ -281,7 +282,8 @@ export function HomePage() {
             </div>
             <button className="trilhas-prev-btn" onClick={() => {
               const slider = document.getElementById('trilhasSlider');
-              slider?.scrollBy({ left: -260, behavior: 'smooth' });
+              const step = window.innerWidth <= 480 ? (slider?.clientWidth || 260) : 260;
+              slider?.scrollBy({ left: -step, behavior: 'smooth' });
             }}>
               <i className="fa-solid fa-chevron-left"></i>
             </button>

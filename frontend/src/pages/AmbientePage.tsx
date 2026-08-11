@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
 import type { Curso, DashboardData } from '../types';
@@ -51,9 +51,10 @@ const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
 };
 
 export function AmbientePage() {
-  const { ambiente } = useParams<{ ambiente: string }>();
+  const { pathname } = useLocation();
+  const ambiente = pathname.split('/').filter(Boolean).pop() || '';
   const navigate = useNavigate();
-  const config = AMBIENTE_CONFIGS[ambiente || ''] || AMBIENTE_CONFIGS.time;
+  const config = AMBIENTE_CONFIGS[ambiente] || AMBIENTE_CONFIGS.time;
 
   const [userName, setUserName] = useState('Usuário');
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -195,15 +196,15 @@ export function AmbientePage() {
 
       <div className="hero-row">
         <section className="hero" style={{ position: 'relative' }}>
-          <img src={leaoImg} alt="Leão" style={{ position: 'absolute', right: 0, bottom: 0, maxHeight: '100%', maxWidth: '280px', objectFit: 'contain', pointerEvents: 'none' }} />
+          <img src={leaoImg} alt="Leão" className="hero-welcome-img" />
           <div className="hero__welcome">
-            <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(20px, 3.0vw, 30px)', fontWeight: 800, color: 'var(--color-text-primary)' }}>
+            <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(20px, 3.2vw, 42px)', fontWeight: 800, color: 'var(--color-text-primary)' }}>
               Bem-Vindo de Volta<br />
               <span style={{ color: '#ff9d00' }}>{userName.split(' ')[0]}</span>
             </h1>
-            <p style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 300, fontSize: 'clamp(10px, 1vw, 12px)', color: 'var(--color-text-secondary)', lineHeight: 1.6, marginTop: 8 }}>
+            <p style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 300, fontSize: 'clamp(10px, 1.25vw, 18px)', color: 'var(--color-text-secondary)', lineHeight: 1.6, marginTop: 8 }}>
               Você está em{' '}
-              <span className="tag-env" style={{ background: 'linear-gradient(135deg,#ff9d00,#e8941a)', color: '#000', padding: '3px 10px', borderRadius: 20, fontWeight: 700, fontSize: 12, display: 'inline-block' }}>
+              <span className="tag-env" style={{ background: 'linear-gradient(135deg,#ff9d00,#e8941a)', color: '#000', padding: '3px 10px', borderRadius: 20, fontWeight: 700, fontSize: 15, display: 'inline-block' }}>
                 {config.tagLabel}
               </span>,<br />
               {config.description}<br /><br />

@@ -4,6 +4,53 @@ declare const API: any;
 
 const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://dashboard.orcomacontabilidade.com.br');
 
+const CACHE_TTL = 5 * 60 * 1000;
+const CACHEABLE_PATHS = [
+  '/api/cursos/',
+  '/api/cursos-recomendados/',
+  '/api/trilhas/',
+  '/api/eventos/',
+  '/api/dashboard/',
+  '/api/user-stats/',
+  '/api/metas-semanais/',
+  '/api/matriculas/minhas/',
+  '/api/notificacoes/',
+];
+const responseCache = new Map<string, { data: any; expires: number }>();
+
+function cacheKey(method: string, path: string): string {
+  const user = AuthService.getEmail() || AuthService.getName() || 'anon';
+  return method + ' ' + path + ' | ' + user;
+}
+
+function isCacheable(method: string, path: string): boolean {
+  if (method !== 'GET') return false;
+  const base = path.split('?')[0];
+  return CACHEABLE_PATHS.includes(base);
+}
+
+function setCache(method: string, path: string, data: any) {
+  if (!isCacheable(method, path)) return;
+  responseCache.set(cacheKey(method, path), { data, expires: Date.now() + CACHE_TTL });
+}
+
+function getCache(method: string, path: string): any | undefined {
+  if (!isCacheable(method, path)) return undefined;
+  const key = cacheKey(method, path);
+  const hit = responseCache.get(key);
+  if (!hit) return undefined;
+  if (Date.now() < hit.expires) return hit.data;
+  responseCache.delete(key);
+  return undefined;
+}
+
+function invalidateCache(path: string) {
+  const base = path.split('?')[0];
+  for (const key of Array.from(responseCache.keys())) {
+    if (key.includes(base)) responseCache.delete(key);
+  }
+}
+
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: () => void; reject: (err: any) => void }> = [];
 
@@ -45,6 +92,9 @@ async function request(method: string, path: string, body?: any, _retry = false)
   const options: RequestInit = { method, headers, credentials: 'include' as RequestCredentials };
   if (body !== undefined) options.body = JSON.stringify(body);
 
+  const cached = getCache(method, path);
+  if (cached !== undefined) return cached;
+
   const res = await fetch(url, options);
 
   const isLoginPath = path === '/api/token/';
@@ -68,6 +118,7 @@ async function request(method: string, path: string, body?: any, _retry = false)
         (err as any).data = retryData;
         throw err;
       }
+      setCache(method, path, retryData);
       return retryData;
     } catch (err) {
       processQueue(err);
@@ -86,6 +137,8 @@ async function request(method: string, path: string, body?: any, _retry = false)
     (err as any).data = data;
     throw err;
   }
+  if (method === 'GET') setCache(method, path, data);
+  else invalidateCache(path);
   return data;
 }
 

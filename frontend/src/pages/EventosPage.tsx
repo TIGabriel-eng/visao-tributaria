@@ -156,7 +156,7 @@ export function EventosPage() {
                 background: 'var(--color-surface)',
                 border: '1px solid var(--color-border)',
                 borderRadius: 'var(--radius-xl)',
-                maxWidth: '640px',
+                maxWidth: '832px',
                 width: '100%',
                 maxHeight: '90vh',
                 overflow: 'auto',
@@ -166,15 +166,15 @@ export function EventosPage() {
                 <img
                   src={selected.imagem_url}
                   alt={selected.titulo}
-                  style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0' }}
+                  style={{ width: '100%', height: '260px', objectFit: 'cover', borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0' }}
                 />
               )}
-              <div style={{ padding: '28px' }}>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700, marginBottom: '8px' }}>{selected.titulo || 'Evento'}</h2>
-                <p style={{ color: '#60a5fa', fontSize: '0.9rem', fontWeight: 600, marginBottom: '4px' }}>{formatFullDate(d)}</p>
-                <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', marginBottom: '16px' }}>em {dias} {dias === 1 ? 'dia' : 'dias'}</p>
+              <div style={{ padding: '36.4px' }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.82rem', fontWeight: 700, marginBottom: '8px' }}>{selected.titulo || 'Evento'}</h2>
+                <p style={{ color: '#60a5fa', fontSize: '1.17rem', fontWeight: 600, marginBottom: '4px' }}>{formatFullDate(d)}</p>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.105rem', marginBottom: '20.8px' }}>em {dias} {dias === 1 ? 'dia' : 'dias'}</p>
                 {selected.url && (
-                  <p style={{ marginBottom: '16px' }}>
+                  <p style={{ marginBottom: '20.8px' }}>
                     <a 
                       href={selected.url} 
                       target="_blank" 
@@ -208,7 +208,7 @@ export function EventosPage() {
                   </p>
                 )}
                 {selected.descricao && (
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '24px' }}>{selected.descricao}</p>
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.17rem', lineHeight: 1.6, marginBottom: '31.2px' }}>{selected.descricao}</p>
                 )}
                 <a
                   href={buildGoogleCalendarUrl(selected, d)}
@@ -217,14 +217,14 @@ export function EventosPage() {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 20px',
+                    gap: '10.4px',
+                    padding: '13px 26px',
                     background: 'linear-gradient(135deg, var(--color-accent-2), #2563eb)',
                     color: '#fff',
                     border: 'none',
                     borderRadius: 'var(--radius-full)',
                     fontWeight: 600,
-                    fontSize: '0.85rem',
+                    fontSize: '1.105rem',
                     cursor: 'pointer',
                     textDecoration: 'none',
                   }}
