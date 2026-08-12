@@ -6,11 +6,10 @@ import { VideoPlayer } from '../components/video-area/VideoPlayer';
 import { LessonInfo } from '../components/video-area/LessonInfo';
 import { MaterialsList } from '../components/video-area/MaterialsList';
 import { RatingSystem } from '../components/video-area/RatingSystem';
-import { CommentsSection } from '../components/video-area/CommentsSection';
 import { LessonSidebar } from '../components/video-area/LessonSidebar';
 import { MobileTabs } from '../components/video-area/MobileTabs';
 import { ProgressTracker } from '../components/video-area/ProgressTracker';
-import type { Curso, Modulo, Material, Review, Comentario } from '../types';
+import type { Curso, Modulo, Material, Review } from '../types';
 
 interface ActiveLesson {
   moduloIdx: number;
@@ -34,12 +33,10 @@ export function VideoAreaPage() {
 
   const [activeLesson, setActiveLesson] = useState<ActiveLesson | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [progressoGeral, setProgressoGeral] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [showCourseCompleteModal, setShowCourseCompleteModal] = useState(false);
   const [isPostingReview, setIsPostingReview] = useState(false);
-  const [isPostingComment, setIsPostingComment] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -273,10 +270,6 @@ export function VideoAreaPage() {
         ApiService.getAvaliacoes(moduloId).then((data: any) => {
           setReviews(data?.results || data || []);
         }).catch(() => setReviews([]));
-
-        ApiService.getComentarios(moduloId).then((data: any) => {
-          setComentarios(data?.results || data || []);
-        }).catch(() => setComentarios([]));
       }
     }
   }, [activeLesson, curso]);
@@ -320,54 +313,6 @@ export function VideoAreaPage() {
       setIsPostingReview(false);
     }
   }, [activeLesson]);
-
-  const handlePostComment = useCallback(async (texto: string, replyTo?: number) => {
-    if (!activeLesson?.modulo?.id) return;
-    setIsPostingComment(true);
-    try {
-      const userName = AuthService.getName() || 'Usuário';
-      const userAvatar = AuthService.getAvatar();
-      const newComment: Comentario = {
-        id: Date.now(),
-        texto,
-        usuario_nome: userName,
-        usuario_avatar: userAvatar,
-        created_at: new Date().toISOString(),
-      };
-      try {
-        await ApiService.postComentario(activeLesson.modulo.id, { texto, comentario_pai: replyTo });
-      } catch {}
-      if (replyTo) {
-        setComentarios((prev) =>
-          prev.map((c) =>
-            c.id === replyTo
-              ? { ...c, respostas: [...(c.respostas || []), newComment] }
-              : c
-          )
-        );
-      } else {
-        setComentarios((prev) => [newComment, ...prev]);
-      }
-    } finally {
-      setIsPostingComment(false);
-    }
-  }, [activeLesson]);
-
-  const handleDeleteComment = useCallback(async (id: number) => {
-    try { await ApiService.deleteComentario(id); } catch {}
-    setComentarios((prev) => prev.filter((c) => c.id !== id));
-  }, []);
-
-  const handleLikeComment = useCallback(async (id: number) => {
-    try { await ApiService.curtirComentario(id); } catch {}
-    setComentarios((prev) =>
-      prev.map((c) =>
-        c.id === id
-          ? { ...c, curtido_por_mim: !c.curtido_por_mim, curtidas: (c.curtidas || 0) + (c.curtido_por_mim ? -1 : 1) }
-          : c
-      )
-    );
-  }, []);
 
   const avgStars = reviews.length > 0
     ? reviews.reduce((acc, r) => acc + r.nota, 0) / reviews.length
@@ -557,15 +502,6 @@ export function VideoAreaPage() {
                     onPostReview={handlePostReview}
                     isPosting={isPostingReview}
                   />
-                  <div style={{ marginTop: '24px' }}>
-                    <CommentsSection
-                      comentarios={comentarios}
-                      onPostComment={handlePostComment}
-                      onDeleteComment={handleDeleteComment}
-                      onLikeComment={handleLikeComment}
-                      isPosting={isPostingComment}
-                    />
-                  </div>
                 </div>
               )}
             </div>
@@ -590,6 +526,18 @@ export function VideoAreaPage() {
           {mobileTab === 'materiais' && (
             <div className="va-mobile-materiais">
               <MaterialsList materiais={currentModulo?.materiais || []} />
+            </div>
+          )}
+
+          {mobileTab === 'comentarios' && (
+            <div className="va-mobile-comentarios">
+              <RatingSystem
+                reviews={reviews}
+                averageStars={avgStars}
+                totalReviews={reviews.length}
+                onPostReview={handlePostReview}
+                isPosting={isPostingReview}
+              />
             </div>
           )}
         </main>

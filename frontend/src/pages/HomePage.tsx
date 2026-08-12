@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
 import { getChildAcademies } from '../types';
-import type { Curso, Evento, Trilha, DashboardData } from '../types';
+import type { Curso, Evento, Trilha, DashboardData, Ambiente } from '../types';
 import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
 import banner1 from '../assets/images/banner1.png';
 import banner2 from '../assets/images/banner2.png';
@@ -14,6 +14,27 @@ const heroSlides = [
   { src: banner2, alt: 'Banner Orcoma Academy 2' },
   { src: banner3, alt: 'Banner Orcoma Academy 3' },
 ];
+
+const ACADEMY_DESC_BY_PATH: Record<string, string> = {
+  '/time':
+    'Treinamentos práticos que ajudem os colaboradores das empresas cliente a melhorarem sua performance no dia a dia.',
+  '/orcomakers':
+    'Treinamentos internos dos colaboradores da Orcoma Contabilidade, com o objetivo de padronizar os processos, desenvolver habilidades e fortalecer a cultura.',
+  '/contabil':
+    'Destinada a conteúdos técnicos, atualizações contábeis, fiscais, tributárias, trabalhistas e orientações importantes relacionadas à rotina empresarial.',
+  '/empresarial':
+    'Treinamentos voltados para o crescimento e desenvolvimento das empresas, indo além da contabilidade tradicional.',
+};
+
+const AMBIENTE_PATH_BY_NOME: Record<string, string> = {
+  'Academy Contábil': '/contabil',
+  'Academy Gestão Empresarial': '/empresarial',
+  'Academy Team': '/time',
+  'Academy Time': '/time',
+  'Academy Orcomakers': '/orcomakers',
+};
+
+const normalizeNome = (s: string) => s.trim().toLowerCase();
 
 function HeroCarousel() {
   const [current, setCurrent] = useState(0);
@@ -100,6 +121,7 @@ export function HomePage() {
   const [recomendados, setRecomendados] = useState<Curso[]>([]);
   const [, setEventos] = useState<Evento[]>([]);
   const [trilhas, setTrilhas] = useState<Trilha[]>([]);
+  const [ambientes, setAmbientes] = useState<Ambiente[]>([]);
   const [metricas, setMetricas] = useState<DashboardData['metricas'] | null>(null);
   const [continuar, setContinuar] = useState<{ curso: Curso; progresso: number } | null>(null);
 
@@ -143,6 +165,10 @@ export function HomePage() {
 
     ApiService.getTrilhas()
       .then((trilhasData) => setTrilhas(trilhasData || []))
+      .catch(() => {});
+
+    ApiService.getAmbientes()
+      .then((ambData) => setAmbientes(ambData || []))
       .catch(() => {});
 
     ApiService.getDashboard()
@@ -210,17 +236,39 @@ export function HomePage() {
 
       <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: 'var(--color-text-primary)', margin: '8px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Seu Ambiente de Aprendizagem</h1>
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '16px', justifyContent: 'center' }}>
-        {getChildAcademies(AuthService.getCurrentAcademy()).map((academy) => (
-          <a key={academy.path} href={academy.path} className="ambiente-card" data-academy={academy.name}
-            onClick={(e) => { e.preventDefault(); navigate(academy.path); }}
-          >
-            <div className="ambiente-card__icon"><i className={`fa-solid ${academy.icon}`}></i></div>
-            <div className="ambiente-card__info">
-              <h3>{academy.name}</h3>
-              <p>{academy.type === 'business' ? 'Capacitações em contabilidade, fiscal, tributário e legislação para apoiar a gestão segura e eficiente do seu negócio.' : 'Conteúdos de gestão, liderança e estratégia para impulsionar o crescimento e a performance empresarial.'}</p>
-            </div>
-          </a>
-        ))}
+        {getChildAcademies(AuthService.getCurrentAcademy()).map((academy) => {
+          const ambiente =
+            ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(academy.name)) ||
+            ambientes.find((a) => AMBIENTE_PATH_BY_NOME[a.nome] === academy.path);
+          const thumb = ambiente?.imagem_url || '';
+          const descricao =
+            ambiente?.descricao?.trim() || ACADEMY_DESC_BY_PATH[academy.path] || '';
+          return (
+            <a key={academy.path} href={academy.path} className="ambiente-card" data-academy={academy.name}
+              onClick={(e) => { e.preventDefault(); navigate(academy.path); }}
+            >
+              <div className="ambiente-card__image">
+                {thumb ? (
+                  <img src={thumb} alt={academy.name} loading="lazy" />
+                ) : (
+                  <div className="ambiente-card__placeholder">
+                    <span>{academy.name.charAt(0)}</span>
+                  </div>
+                )}
+                <span className="ambiente-card__badge">Ambiente</span>
+                <span className="ambiente-card__ribbon">NOVO</span>
+              </div>
+              <div className="ambiente-card__info">
+                <h3>{academy.name}</h3>
+                <div className="ambiente-card__divider"></div>
+                <p className="ambiente-card__desc">{descricao}</p>
+                <div className="ambiente-card__meta">
+                  <span><i className="fa-solid fa-arrow-right"></i> Acessar</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
       </div>
 
       <div className="section__header" style={{ margin: '16px 0 0', animation: 'fadeUp 1.5s ease both' }}>
@@ -269,16 +317,12 @@ export function HomePage() {
               <i className="fa-solid fa-chevron-right"></i>
             </button>
             <div className="learning-paths__list" id="trilhasSlider">
-              {trilhas.map((t) => {
-                const total = (t.cursos || []).length;
-                const label = total + ' curso' + (total !== 1 ? 's' : '');
-                return (
-                  <div key={t.id} className="trail-card">
-                    <div className="trail-card__icon"><i className="fas fa-route"></i></div>
-                    <div><h3>{t.nome}</h3><span>{label}</span></div>
-                  </div>
-                );
-              })}
+              {trilhas.map((t) => (
+                <div key={t.id} className="trail-card" onClick={() => navigate('/trilhas/' + t.id)}>
+                  <div className="trail-card__icon"><i className="fas fa-route"></i></div>
+                  <h3>{t.nome}</h3>
+                </div>
+              ))}
             </div>
             <button className="trilhas-prev-btn" onClick={() => {
               const slider = document.getElementById('trilhasSlider');

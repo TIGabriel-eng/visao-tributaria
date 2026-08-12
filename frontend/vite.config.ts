@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://dashboard.orcomacontabilidade.com.br',
+        target: process.env.VITE_DEV_API_URL || 'http://localhost:8000',
         changeOrigin: true,
       },
     },

@@ -36,7 +36,7 @@ export function CursosConcluidosPage() {
           {concluidos.map((c) => {
             const slug = c.slug || c.id;
             return (
-              <div key={c.id} className="curso-card" onClick={() => navigate('/curso/' + slug)}>
+              <div key={c.id} className="curso-card" onClick={() => navigate('/video-area/' + slug)}>
                 <div className="curso-card__image">
                   <img src={c.thumbnail_url || ''} alt={c.titulo} loading="lazy" />
                   <span className="curso-card__status status-concluido">Concluído</span>

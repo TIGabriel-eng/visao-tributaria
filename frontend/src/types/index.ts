@@ -55,17 +55,6 @@ export interface Review {
   created_at?: string;
 }
 
-export interface Comentario {
-  id: number;
-  texto: string;
-  usuario_nome: string;
-  usuario_avatar?: string;
-  created_at: string;
-  curtidas?: number;
-  curtido_por_mim?: boolean;
-  respostas?: Comentario[];
-}
-
 export interface AulaProgresso {
   concluido: boolean;
   concluido_em?: string;
@@ -86,7 +75,11 @@ export interface Evento {
 export interface Trilha {
   id: number;
   nome: string;
-  cursos?: number[];
+  descricao?: string;
+  ambiente?: number;
+  ambiente_nome?: string;
+  cursos?: Curso[];
+  cursos_count?: number;
 }
 
 export interface Notificacao {
@@ -130,6 +123,13 @@ export interface AcademyConfig {
   children?: string[];
 }
 
+export interface Ambiente {
+  id: number;
+  nome: string;
+  descricao?: string;
+  ativo?: boolean;
+  imagem_url?: string | null;
+}
 export const ACADEMIES: Record<string, AcademyConfig> = {
   'Academy Team': { name: 'Academy Team', icon: 'fa-users', path: '/team', type: 'team', children: ['Academy Time', 'Academy Orcomakers'] },
   'Academy Business': { name: 'Academy Business', icon: 'fa-building', path: '/business', type: 'business', children: ['Academy Contabil', 'Academy Empresarial'] },

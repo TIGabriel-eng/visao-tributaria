@@ -39,7 +39,7 @@ export function MeusCursosPage() {
             const statusClass = status === 'em-andamento' ? 'status-em-andamento' : status === 'concluido' ? 'status-concluido' : 'status-nao-iniciado';
             const thumbSrc = c.thumbnail_url || '';
             return (
-              <div key={c.id} className="curso-card" onClick={() => navigate('/curso/' + slug)}>
+              <div key={c.id} className="curso-card" onClick={() => navigate('/video-area/' + slug)}>
                 <div className="curso-card__image">
                   <img src={thumbSrc} alt={c.titulo} loading="lazy" />
                   <span className={`curso-card__status ${statusClass}`}>{statusLabel}</span>

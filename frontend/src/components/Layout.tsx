@@ -5,6 +5,7 @@ import { ApiService } from '../services/api';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { RightPanel } from './RightPanel';
+import { EventoComunicado } from './EventoComunicado';
 import type { Curso, Trilha, Evento } from '../types';
 
 export function Layout() {
@@ -176,6 +177,7 @@ export function Layout() {
         </main>
       </div>
       {showRightPanel && <RightPanel />}
+      <EventoComunicado />
       {searchOpen && (
         <div className="search-modal-overlay is-visible" onClick={() => setSearchOpen(false)} id="searchModalOverlay">
           <div className="search-modal" onClick={(e) => e.stopPropagation()}>

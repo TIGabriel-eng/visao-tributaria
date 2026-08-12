@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
@@ -27,12 +27,65 @@ export function LoginPage() {
 
   const [toast, setToast] = useState('');
 
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const recaptchaIds = useRef<{ login: number; cadastro: number }>({ login: -1, cadastro: -1 });
+
+  const renderRecaptcha = () => {
+    const w = window as any;
+    if (!siteKey || !w.grecaptcha?.render) return;
+
+    (['login', 'cadastro'] as const).forEach((key) => {
+      const el = document.getElementById(`recaptcha-${key}`);
+      if (!el) return;
+      if (recaptchaIds.current[key] >= 0) {
+        if (el.childElementCount > 0) return;
+        recaptchaIds.current[key] = -1;
+      }
+      recaptchaIds.current[key] = w.grecaptcha.render(`recaptcha-${key}`, { sitekey: siteKey, theme: 'dark', size: 'normal' });
+    });
+  };
+
+  useEffect(() => {
+    const w = window as any;
+    if (w.grecaptcha?.render) {
+      renderRecaptcha();
+    } else {
+      const interval = setInterval(() => {
+        if ((window as any).grecaptcha?.render) {
+          clearInterval(interval);
+          renderRecaptcha();
+        }
+      }, 250);
+      return () => clearInterval(interval);
+    }
+  }, [view]);
+
+  const getRecaptchaToken = (key: 'login' | 'cadastro') => {
+    const w = window as any;
+    const id = recaptchaIds.current[key];
+    if (!siteKey || !w.grecaptcha?.getResponse || id < 0) return '';
+    return w.grecaptcha.getResponse(id) as string;
+  };
+
+  const resetRecaptcha = (key: 'login' | 'cadastro') => {
+    const w = window as any;
+    const id = recaptchaIds.current[key];
+    if (w.grecaptcha?.reset && id >= 0) w.grecaptcha.reset(id);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    const token = getRecaptchaToken('login');
+    if (siteKey && !token) {
+      setError('Complete o reCAPTCHA para continuar.');
+      return;
+    }
+
     setLoading(true);
     try {
-      const data = await ApiService.post('/api/token/', { username: email, password });
+      const data = await ApiService.post('/api/token/', { username: email, password, recaptcha_token: token });
       const userData = data.user || {};
       const role = userData.role || 'visitor';
       AuthService.login({
@@ -41,6 +94,7 @@ export function LoginPage() {
         name: (userData.first_name + ' ' + userData.last_name).trim() || userData.username,
         avatar: userData.avatar_url || '',
       });
+      resetRecaptcha('login');
       if (role === 'cliente_orcoma' || role === 'empresario') {
         AuthService.setCurrentAcademy('business');
         navigate('/business');
@@ -61,6 +115,12 @@ export function LoginPage() {
     e.preventDefault();
     setCadError('');
 
+    const token = getRecaptchaToken('cadastro');
+    if (siteKey && !token) {
+      setCadError('Complete o reCAPTCHA para continuar.');
+      return;
+    }
+
     if (cadSenha.length < 8) {
       setCadError('A senha deve ter no mínimo 8 caracteres');
       return;
@@ -79,7 +139,9 @@ export function LoginPage() {
         password: cadSenha,
         first_name: cadNome,
         last_name: cadSobrenome,
+        recaptcha_token: token,
       });
+      resetRecaptcha('cadastro');
       setView('login');
       setCadNome('');
       setCadSobrenome('');
@@ -149,6 +211,11 @@ export function LoginPage() {
                   required
                 />
               </div>
+              {siteKey && (
+                <div className="recaptcha-box">
+                  <div id="recaptcha-login" />
+                </div>
+              )}
               <p className="forgot-password">
                 <a href="#" onClick={(e) => { e.preventDefault(); setRecoveryOpen(true); }}>
                   Esqueci a minha senha
@@ -176,7 +243,7 @@ export function LoginPage() {
                   <label>Nome</label>
                   <input
                     type="text"
-                    placeholder="Digite"
+                    placeholder="Seu nome"
                     value={cadNome}
                     onChange={(e) => setCadNome(e.target.value)}
                     autoComplete="given-name"
@@ -188,7 +255,7 @@ export function LoginPage() {
                   <label>Sobrenome</label>
                   <input
                     type="text"
-                    placeholder="Digite"
+                    placeholder="Seu sobrenome"
                     value={cadSobrenome}
                     onChange={(e) => setCadSobrenome(e.target.value)}
                     autoComplete="family-name"
@@ -221,6 +288,11 @@ export function LoginPage() {
                   maxLength={255}
                 />
               </div>
+              {siteKey && (
+                <div className="recaptcha-box">
+                  <div id="recaptcha-cadastro" />
+                </div>
+              )}
               <span className="login-error">{cadError}</span>
               <p className="termos-texto">
                 Ao se cadastrar, você aceita nossos{' '}

@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { VideoBlockerOverlay, VideoShareBlocker, YouTubeButtonBlocker } from './VideoBlockerOverlay';
+import { VideoBlockerOverlay } from './VideoBlockerOverlay';
+import { ConsentService } from '../../services/consent';
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -48,6 +49,7 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -61,6 +63,11 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(true);
   const [showTabPauseOverlay, setShowTabPauseOverlay] = useState(false);
+
+  const [ytAllowed, setYtAllowed] = useState(() => ConsentService.hasAccepted());
+  const [ytPrompt, setYtPrompt] = useState(false);
+  const [ytError, setYtError] = useState(false);
+  const [ytAttempt, setYtAttempt] = useState(0);
 
   const tempoAssistidoRef = useRef(0);
   const ultimoTempoRef = useRef(0);
@@ -176,21 +183,40 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
   }, [videoType, saveProgress, onProgress, markCompleted]);
 
   useEffect(() => {
-    if (videoType !== 'youtube') return;
+    if (videoType !== 'youtube' || !ytAllowed) return;
     const ytId = extractYouTubeId(videoUrl);
     if (!ytId) return;
 
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstTag = document.getElementsByTagName('script')[0];
-    firstTag?.parentNode?.insertBefore(tag, firstTag);
-
+    const w = window as any;
     let player: any = null;
+    let cancelled = false;
+    let pollTimer: ReturnType<typeof setTimeout> | null = null;
+    let loadTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    setYtError(false);
+    setIsLoading(true);
+
+    const clearLoadTimeout = () => {
+      if (loadTimeout) { clearTimeout(loadTimeout); loadTimeout = null; }
+    };
 
     const onPlayerReady = () => {
+      if (cancelled) return;
+      clearLoadTimeout();
       setIsLoading(false);
-      setDuration(player.getDuration());
-      player.playVideo();
+      try {
+        setDuration(player.getDuration() || 0);
+        player.playVideo();
+      } catch {}
+    };
+
+    const onPlayerError = () => {
+      if (cancelled) return;
+      clearLoadTimeout();
+      setIsLoading(false);
+      setYtError(true);
+      try { player?.destroy(); } catch {}
+      ytPlayerRef.current = null;
     };
 
     const onPlayerStateChange = (event: any) => {
@@ -210,33 +236,7 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
       }
     };
 
-    const createPlayer = () => {
-      if (typeof (window as any).YT === 'undefined' || !(window as any).YT.Player) {
-        setTimeout(createPlayer, 300);
-        return;
-      }
-      const divId = 'yt-player-container';
-      const container = document.getElementById(divId);
-      if (!container) return;
-      player = new (window as any).YT.Player(divId, {
-        videoId: ytId,
-        playerVars: {
-          rel: 0,
-          modestbranding: 1,
-          autoplay: 1,
-          controls: 1,
-          disablekb: 1,
-          fs: 1,
-          iv_load_policy: 3,
-          playsinline: 1,
-        },
-        events: {
-          onReady: onPlayerReady,
-          onStateChange: onPlayerStateChange,
-        },
-      });
-      ytPlayerRef.current = player;
-
+    const startWatchInterval = () => {
       watchIntervalRef.current = setInterval(() => {
         if (!player || typeof player.getCurrentTime !== 'function') return;
         if (isSeekingRef.current) return;
@@ -257,9 +257,69 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
       }, 3000);
     };
 
-    createPlayer();
+    const createPlayer = () => {
+      if (cancelled) return;
+      const container = document.getElementById('yt-player-container');
+      if (!container) return;
+      try {
+        player = new w.YT.Player('yt-player-container', {
+          videoId: ytId,
+          playerVars: {
+            rel: 0,
+            modestbranding: 1,
+            autoplay: 1,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            iv_load_policy: 3,
+            playsinline: 1,
+          },
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange,
+            onError: onPlayerError,
+          },
+        });
+        ytPlayerRef.current = player;
+        startWatchInterval();
+      } catch {
+        if (!cancelled) {
+          setIsLoading(false);
+          setYtError(true);
+        }
+      }
+    };
+
+    const waitForApi = () => {
+      if (cancelled) return;
+      if (w.YT?.Player) { createPlayer(); return; }
+      if (!w.__orcomaYtApiLoading) {
+        w.__orcomaYtApiLoading = true;
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        tag.async = true;
+        const firstTag = document.getElementsByTagName('script')[0];
+        firstTag?.parentNode?.insertBefore(tag, firstTag);
+      }
+      pollTimer = setTimeout(waitForApi, 250);
+    };
+
+    waitForApi();
+
+    loadTimeout = setTimeout(() => {
+      if (cancelled) return;
+      clearLoadTimeout();
+      setIsLoading(false);
+      setYtError(true);
+      w.__orcomaYtApiLoading = false;
+      try { player?.destroy(); } catch {}
+      ytPlayerRef.current = null;
+    }, 20000);
 
     return () => {
+      cancelled = true;
+      clearLoadTimeout();
+      if (pollTimer) clearTimeout(pollTimer);
       if (watchIntervalRef.current) {
         clearInterval(watchIntervalRef.current);
         watchIntervalRef.current = null;
@@ -267,7 +327,7 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
       ytPlayerRef.current = null;
       try { player?.destroy(); } catch {}
     };
-  }, [videoType, videoUrl, saveProgress, onProgress, markCompleted]);
+  }, [videoType, videoUrl, ytAllowed, ytAttempt, saveProgress, onProgress, markCompleted]);
 
   useEffect(() => {
     if (videoType !== 'vimeo') return;
@@ -426,6 +486,15 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
     }
   }, []);
 
+  const handleContainerClick = useCallback((e: React.MouseEvent) => {
+    if (controlsRef.current && controlsRef.current.contains(e.target as Node)) {
+      showControlsTemporarily();
+      return;
+    }
+    togglePlay();
+    showControlsTemporarily();
+  }, [togglePlay, showControlsTemporarily]);
+
   useEffect(() => {
     const handler = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', handler);
@@ -546,18 +615,67 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
     };
   }, []);
 
+  const handlePlaceholderClick = useCallback(() => {
+    if (ConsentService.hasAccepted()) {
+      setYtAllowed(true);
+    } else {
+      setYtPrompt(true);
+    }
+  }, []);
+
+  const acceptConsentForVideo = useCallback(() => {
+    ConsentService.set('accepted');
+    setYtPrompt(false);
+    setYtAllowed(true);
+  }, []);
+
+  const rejectConsentForVideo = useCallback(() => {
+    ConsentService.set('rejected');
+    setYtPrompt(false);
+  }, []);
+
   const renderVideo = () => {
     if (videoType === 'youtube') {
       const ytId = extractYouTubeId(videoUrl);
+      if (!ytId) {
+        return (
+          <div className="va-no-video">
+            <i className="fa-solid fa-video-slash" style={{ fontSize: '2rem', marginBottom: '12px', opacity: 0.4 }} />
+            <span>Nenhum vídeo disponível para esta aula.</span>
+          </div>
+        );
+      }
+
+      if (!ytAllowed) {
+        return (
+          <div className="va-yt-placeholder" onClick={handlePlaceholderClick}>
+            <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt={title} loading="lazy" />
+            <div className="va-yt-placeholder__shade" />
+            <button type="button" className="va-yt-placeholder__play" aria-label="Reproduzir vídeo">
+              <i className="fa-solid fa-play" />
+            </button>
+            {ytPrompt && (
+              <div className="va-yt-consent" onClick={(e) => e.stopPropagation()}>
+                <p>
+                  Ao reproduzir, o YouTube pode armazenar cookies para fornecer o serviço de vídeo
+                  e coletar estatísticas de acesso. Deseja continuar?
+                </p>
+                <div className="va-yt-consent__actions">
+                  <button type="button" className="va-yt-consent__accept" onClick={acceptConsentForVideo}>
+                    Aceitar e assistir
+                  </button>
+                  <button type="button" className="va-yt-consent__reject" onClick={rejectConsentForVideo}>
+                    Não, obrigado
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      }
+
       return (
-        <div id="yt-player-container" style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
-          {!ytId && (
-            <div className="va-no-video">
-              <i className="fa-solid fa-video-slash" style={{ fontSize: '2rem', marginBottom: '12px', opacity: 0.4 }} />
-              <span>Nenhum vídeo disponível para esta aula.</span>
-            </div>
-          )}
-        </div>
+        <div id="yt-player-container" style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} />
       );
     }
 
@@ -599,6 +717,14 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
     );
   };
 
+  const canControlVideo =
+    videoType !== 'unknown' &&
+    !isLoading &&
+    !ytError &&
+    (videoType !== 'youtube' || ytAllowed) &&
+    !showCompletedOverlay &&
+    !showTabPauseOverlay;
+
   return (
     <div
       ref={containerRef}
@@ -606,13 +732,11 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
       onContextMenu={(e) => e.preventDefault()}
       onMouseMove={showControlsTemporarily}
       onMouseLeave={() => { if (isPlayingRef.current) setControlsVisible(false); }}
-      onClick={showControlsTemporarily}
+      onClick={handleContainerClick}
     >
       {renderVideo()}
 
       <VideoBlockerOverlay />
-      <VideoShareBlocker />
-      {videoType === 'youtube' && <YouTubeButtonBlocker />}
 
       {showCompletedOverlay && (
         <div className="va-completed-overlay">
@@ -645,8 +769,30 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
         </div>
       )}
 
-      {videoType !== 'youtube' && (
-      <div className={"va-controls" + (controlsVisible ? " visible" : "")}>
+      {ytError && (
+        <div className="va-yt-error">
+          <i className="fa-solid fa-circle-exclamation" style={{ fontSize: '1.6rem', opacity: 0.6 }} />
+          <p>Não foi possível carregar o vídeo. Verifique sua conexão e tente novamente.</p>
+          <button type="button" onClick={() => setYtAttempt((a) => a + 1)}>Tentar novamente</button>
+        </div>
+      )}
+
+      {canControlVideo && (
+        <button
+          type="button"
+          className={"va-center-btn" + (controlsVisible ? " visible" : "")}
+          onClick={(e) => { e.stopPropagation(); togglePlay(); showControlsTemporarily(); }}
+          aria-label={isPlaying ? 'Pausar' : 'Reproduzir'}
+        >
+          {isPlaying ? (
+            <i className="fa-solid fa-pause" />
+          ) : (
+            <i className="fa-solid fa-play" style={{ marginLeft: '4px' }} />
+          )}
+        </button>
+      )}
+
+      <div ref={controlsRef} className={"va-controls" + (controlsVisible ? " visible" : "")}>
         <button
           className="va-controls__btn"
           onClick={() => { togglePlay(); showControlsTemporarily(); }}
@@ -729,7 +875,6 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
           </button>
         </div>
       </div>
-      )}
     </div>
   );
 }

@@ -199,9 +199,26 @@ export const ApiService = {
     return this.get('/api/eventos/');
   },
 
+  async getProximoEvento() {
+    return this.get('/api/eventos/proximo/');
+  },
+
+  async marcarEventoLido(id: number) {
+    return this.post('/api/eventos/' + id + '/marcar-lida/');
+  },
+
   // Trilhas
   async getTrilhas() {
     return this.get('/api/trilhas/');
+  },
+
+  // Ambientes
+  async getAmbientes() {
+    return this.get('/api/ambientes/');
+  },
+
+  async getTrilha(id: number | string) {
+    return this.get('/api/trilhas/' + id + '/');
   },
 
   // Perfil
@@ -266,23 +283,6 @@ export const ApiService = {
 
   async postAvaliacao(moduloId: number | string, data: { modulo?: number | string; nota: number; comentario: string }) {
     return this.post('/api/modulos/' + moduloId + '/avaliacoes/', data);
-  },
-
-  // Comentários
-  async getComentarios(moduloId: number | string) {
-    return this.get('/api/modulos/' + moduloId + '/comentarios/');
-  },
-
-  async postComentario(moduloId: number | string, data: { texto: string; comentario_pai?: number }) {
-    return this.post('/api/modulos/' + moduloId + '/comentarios/', data);
-  },
-
-  async deleteComentario(comentarioId: number) {
-    return this.del('/api/comentarios/' + comentarioId + '/');
-  },
-
-  async curtirComentario(comentarioId: number) {
-    return this.post('/api/comentarios/' + comentarioId + '/curtir/');
   },
 
   // Matrícula - posição do vídeo

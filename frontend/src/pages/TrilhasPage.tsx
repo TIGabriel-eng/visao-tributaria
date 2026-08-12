@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ApiService } from '../services/api';
 import type { Trilha } from '../types';
 import trilhaNaoEncontradaImg from '../assets/images/trilha-não-encontrada.png';
 
 export function TrilhasPage() {
+  const navigate = useNavigate();
   const [trilhas, setTrilhas] = useState<Trilha[]>([]);
 
   useEffect(() => {
@@ -20,16 +22,12 @@ export function TrilhasPage() {
         </div>
       ) : (
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          {trilhas.map((t) => {
-            const total = (t.cursos || []).length;
-            const label = total + ' curso' + (total !== 1 ? 's' : '');
-            return (
-              <div key={t.id} className="trail-card">
-                <div className="trail-card__icon"><i className="fas fa-route"></i></div>
-                <div><h3>{t.nome}</h3><span>{label}</span></div>
-              </div>
-            );
-          })}
+          {trilhas.map((t) => (
+            <div key={t.id} className="trail-card" onClick={() => navigate('/trilhas/' + t.id)}>
+              <div className="trail-card__icon"><i className="fas fa-route"></i></div>
+              <h3>{t.nome}</h3>
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -91,6 +91,12 @@ ul { list-style: none; }
   to { transform: rotate(360deg); }
 }
 
+/* Bolinhas da Academy Time — piscar leve e suave */
+@keyframes bullet-blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.82); }
+}
+
 .animate-fade-up { animation: fadeUp 0.6s ease both; }
 .animate-fade-in { animation: fadeIn 0.5s ease both; }
 .animate-slide-in { animation: slideIn 0.4s ease both; }
@@ -1091,73 +1097,168 @@ ul { list-style: none; }
    AMBIENTE CARDS
    ============================================================ */
 .ambiente-card {
-  width: 300px;
-  height: 350px;
+  width: 336px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background: #071733;
-  border: 1px solid #102550;
-  border-radius: 14px;
-  padding: 24px;
+  background: rgba(8,20,45,.9);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all .3s ease;
   text-decoration: none;
   color: inherit;
-  transition: border-color .3s, transform .3s, box-shadow .3s;
-  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
   animation: fadeUp 1.5s ease both;
 }
 
 .ambiente-card:nth-child(1) { animation-delay: 0.2s; }
 .ambiente-card:nth-child(2) { animation-delay: 0.5s; }
 
-.ambiente-card:hover {
-  border-color: #1d4ed8;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(29,78,216,.15);
+.ambiente-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 18px rgba(125,196,255,.45), 0 0 6px rgba(125,196,255,.35);
+  opacity: 0;
+  animation: pulseCard 3s ease-in-out infinite;
 }
 
-.ambiente-card__icon {
-  width: 80px;
-  height: 80px;
-  min-width: 80px;
-  border-radius: 16px;
-  background: rgba(59,130,246,.15);
+.ambiente-card:nth-child(1)::before { animation-delay: 1.8s; }
+.ambiente-card:nth-child(2)::before { animation-delay: 2.3s; }
+.ambiente-card:nth-child(3)::before { animation-delay: 2.8s; }
+.ambiente-card:nth-child(4)::before { animation-delay: 3.3s; }
+
+@keyframes pulseCard {
+  0%, 86%, 100% { opacity: 0; }
+  93%, 97% { opacity: 1; }
+}
+
+.ambiente-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(37,99,235,.15);
+  border-color: rgba(37,99,235,.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambiente-card::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.ambiente-card__image {
+  position: relative;
+  width: 100%;
+  height: 192px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.ambiente-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ambiente-card__placeholder {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(135deg, #071733, #102550);
+}
+.ambiente-card__placeholder span {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: rgba(255,255,255,.16);
 }
 
-.ambiente-card__icon i {
-  font-size: 36px;
-  color: #3b82f6;
+.ambiente-card__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  background: rgba(255,157,0,.92);
+  color: #07111f;
+}
+
+.ambiente-card__ribbon {
+  position: absolute;
+  top: 16px;
+  right: -36px;
+  transform: rotate(45deg);
+  padding: 4px 36px;
+  background: #a5d8ff;
+  color: #07111f;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  z-index: 2;
+  white-space: nowrap;
 }
 
 .ambiente-card__info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+  padding: 12px 12px 0;
+  flex: 1;
   overflow: hidden;
 }
 
 .ambiente-card__info h3 {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
-  text-align: center;
+  text-align: left;
+  line-height: 1.3;
 }
 
-.ambiente-card__info p {
-  font-size: 13px;
+.ambiente-card__divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,.1);
+}
+
+.ambiente-card__desc {
+  margin: 0;
+  font-size: 12px;
   color: var(--color-text-secondary);
   line-height: 1.5;
+  text-align: left;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-align: center;
+}
+
+.ambiente-card__meta {
+  margin-top: auto;
+  padding: 8px 0 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #ff9d00;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
 /* ============================================================
@@ -1910,12 +2011,6 @@ ul { list-style: none; }
 
 .trail-card h3 {
   font-size: 13.2px;
-  margin-bottom: 2px;
-}
-
-.trail-card span {
-  color: #8aa0c8;
-  font-size: 12.1px;
 }
 
 /* ============================================================
@@ -2393,7 +2488,7 @@ ul { list-style: none; }
 .login-page {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 500px;
+  grid-template-columns: minmax(0, 1fr) 500px;
 }
 
 .login-left {
@@ -2403,10 +2498,12 @@ ul { list-style: none; }
   align-items: center;
   text-align: center;
   padding: 60px;
+  min-width: 0;
 }
 
 .login-left__logo {
   width: 350px;
+  max-width: 100%;
   height: auto;
 }
 
@@ -2483,6 +2580,19 @@ ul { list-style: none; }
 
 .input-group input::placeholder {
   color: var(--color-text-muted);
+}
+
+.recaptcha-box {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 16px;
+  transform-origin: top center;
+}
+
+.recaptcha-box > div {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
 }
 
 .login-error {
@@ -3061,7 +3171,8 @@ ul { list-style: none; }
   .curso-card { width: 280px; height: 280px; }
   .curso-card__image { height: 190px; }
   .trail-card { width: 320px; }
-  .ambiente-card { width: 320px; height: 380px; }
+  .ambiente-card { width: 384px; }
+  .ambiente-card__image { height: 216px; }
 
   .hero-row .hero { flex: 0 1 910px; max-width: 910px; max-height: 403px; }
   .hero-welcome-img { max-width: 364px; }
@@ -3159,7 +3270,7 @@ ul { list-style: none; }
   .curso-card { width: calc(50% - 7px); min-width: 220px; height: auto; min-height: 220px; }
   .curso-card__image { height: 140px; }
   .trail-card { width: calc(50% - 7px); min-width: 200px; }
-  .ambiente-card { width: calc(50% - 8px); min-width: 220px; }
+  .ambiente-card { width: calc(50% - 8px); min-width: 264px; }
   .hero-row { flex-direction: column; }
   .hero-stats { flex-direction: row; flex-wrap: wrap; }
   .hero-stat-card { flex: 1 1 calc(50% - 8px); min-width: 200px; }
@@ -3231,7 +3342,7 @@ ul { list-style: none; }
   .curso-card__image { height: 120px; }
 
   .trail-card { flex: 0 0 100%; width: 100%; }
-  .ambiente-card { width: 100%; max-width: 100%; height: auto; min-height: 200px; }
+  .ambiente-card { width: 100%; max-width: 100%; height: auto; min-height: 240px; }
 
   .hero-row { flex-direction: column; gap: 16px; }
   .hero-stats { flex-direction: column; }
@@ -3314,10 +3425,9 @@ ul { list-style: none; }
   .cursos-grid { gap: 8px; }
   .trail-card { gap: 8.8px; }
 
-  .ambiente-card { min-height: 160px; padding: 16px; gap: 12px; }
-  .ambiente-card__icon { width: 60px; height: 60px; min-width: 60px; }
-  .ambiente-card__icon i { font-size: 28px; }
-  .ambiente-card__info h3 { font-size: 15px; }
+  .ambiente-card { min-height: 192px; }
+  .ambiente-card__image { height: 144px; }
+  .ambiente-card__info h3 { font-size: 14px; }
 
   .trilhas-prev-btn,
   .trilhas-next-btn {
@@ -4513,5 +4623,95 @@ select.settings-field__input option {
 
   .assinatura-dates-inline {
     flex-direction: column;
+  }
+}
+
+/* ============================================================
+   COOKIE CONSENT BANNER
+   ============================================================ */
+.cookie-consent {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #0d1526;
+  border-top: 1px solid #1e2d45;
+  padding: 16px 20px;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.4);
+  animation: cookie-consent-in 0.3s ease;
+}
+@keyframes cookie-consent-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.cookie-consent__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cookie-consent__content p {
+  margin: 0;
+  flex: 1 1 320px;
+  color: #8b9ab5;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.cookie-consent__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cookie-consent__accept {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #ff9d00;
+  color: #07111f;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: background 0.15s ease;
+}
+.cookie-consent__accept:hover { background: #e8941a; }
+.cookie-consent__reject {
+  padding: 10px 20px;
+  border: 1px solid #1e2d45;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  color: #c7d2e5;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease;
+}
+.cookie-consent__reject:hover { border-color: #3b82f6; }
+
+@media (max-width: 640px) {
+  .cookie-consent {
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  }
+  .cookie-consent__content {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .cookie-consent__content p {
+    font-size: 0.85rem;
+  }
+  .cookie-consent__actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .cookie-consent__actions button {
+    width: 100%;
+    padding: 12px;
   }
 }

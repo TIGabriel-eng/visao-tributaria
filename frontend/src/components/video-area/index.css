@@ -364,7 +364,7 @@
   z-index: 10;
   user-select: none;
   -webkit-user-select: none;
-  pointer-events: none;
+  pointer-events: all;
 }
 
 .video-share-blocker {
@@ -566,6 +566,37 @@
   border-top-color: #f59e0b;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+/* ── CENTER PLAY/PAUSE BUTTON ── */
+.va-center-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 35;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1.35rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.15s ease, background 0.15s ease;
+}
+.va-center-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.va-center-btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+  transform: translate(-50%, -50%) scale(1.08);
 }
 
 /* ── CUSTOM CONTROLS ── */
@@ -1369,7 +1400,6 @@
 }
 
 /* ── MOBILE HIDDEN ── */
-.va-content-comments.hidden-mobile,
 .va-content.hidden-mobile {
   display: none;
 }
@@ -1445,18 +1475,32 @@
     border-bottom-color: #f59e0b;
   }
 
-  .va-content-comments.hidden-mobile { display: block !important; }
-  .va-content.hidden-mobile { display: block !important; }
-
   .va-mobile-aulas {
     padding: 16px;
   }
   .va-mobile-materiais {
     padding: 16px;
   }
+  .va-mobile-comentarios {
+    padding: 16px;
+  }
 
   .va-lesson-info { padding: 16px; }
   .va-lesson-info__title { font-size: 1.2rem; }
+
+  .va-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .va-tabs::-webkit-scrollbar { display: none; }
+  .va-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 12px 14px;
+    font-size: 0.8rem;
+  }
 
   .va-rating { padding: 16px; }
   .va-comments { padding: 16px; }
@@ -1469,6 +1513,8 @@
   }
   .va-controls__volume-slider { display: none; }
   .va-controls__btn { width: 44px; height: 44px; }
+
+  .va-center-btn { width: 56px; height: 56px; font-size: 1.15rem; }
 
   .va-comment-card.nested { margin-left: 16px; }
 
@@ -1484,6 +1530,154 @@
 @media (min-width: 1025px) and (max-width: 1439px) {
   .va-content {
     max-width: none;
+  }
+}
+
+/* ── YOUTUBE PLACEHOLDER / CONSENT / ERROR ── */
+.va-yt-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 15;
+}
+.va-yt-placeholder img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.va-yt-placeholder__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.6));
+}
+.va-yt-placeholder__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(245, 166, 35, 0.95);
+  color: #0a0e1a;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.va-yt-placeholder__play:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: #f5a623;
+}
+.va-yt-placeholder__play i { margin-left: 4px; }
+
+.va-yt-consent {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(10, 14, 26, 0.94);
+}
+.va-yt-consent p {
+  max-width: 520px;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.va-yt-consent__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.va-yt-consent__accept {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f5a623;
+  color: #0a0e1a;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.va-yt-consent__accept:hover { background: #ffb94a; }
+.va-yt-consent__reject {
+  padding: 10px 18px;
+  border: 1px solid #3a4156;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+.va-yt-consent__reject:hover { border-color: #5a6380; }
+
+.va-yt-error {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: #0a0e1a;
+  color: #9ca3af;
+}
+.va-yt-error p { max-width: 420px; line-height: 1.5; }
+.va-yt-error button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f5a623;
+  color: #0a0e1a;
+  font-weight: 700;
+}
+.va-yt-error button:hover { background: #ffb94a; }
+
+@media (max-width: 480px) {
+  .va-yt-consent {
+    padding: 16px 14px;
+    gap: 10px;
+    overflow-y: auto;
+  }
+  .va-yt-consent p {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    max-width: none;
+  }
+  .va-yt-consent__actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .va-yt-consent__actions button {
+    width: 100%;
+    padding: 12px;
+  }
+  .va-yt-placeholder__play {
+    width: 60px;
+    height: 60px;
+    font-size: 1.3rem;
   }
 }
 

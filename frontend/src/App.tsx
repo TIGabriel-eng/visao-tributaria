@@ -9,6 +9,7 @@ import { EventosPage } from './pages/EventosPage';
 import { ContinuarAssistindoPage } from './pages/ContinuarAssistindoPage';
 import { CursosConcluidosPage } from './pages/CursosConcluidosPage';
 import { TrilhasPage } from './pages/TrilhasPage';
+import { TrilhaDetalhePage } from './pages/TrilhaDetalhePage';
 import { CursoPage } from './pages/CursoPage';
 import { SuportePage } from './pages/SuportePage';
 import { ConfiguracoesPage } from './pages/ConfiguracoesPage';
@@ -16,6 +17,7 @@ import { MeuPerfilPage } from './pages/MeuPerfilPage';
 import { CertificadosPage } from './pages/CertificadosPage';
 import { NotificacoesPage } from './pages/NotificacoesPage';
 import { VideoAreaPage } from './pages/VideoAreaPage';
+import { CookieConsent } from './components/CookieConsent';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isLoggedIn = AuthService.isLoggedIn();
@@ -73,6 +75,7 @@ export default function App() {
           <Route path="continuar-assistindo" element={<ContinuarAssistindoPage />} />
           <Route path="cursos-concluidos" element={<CursosConcluidosPage />} />
           <Route path="trilhas" element={<TrilhasPage />} />
+          <Route path="trilhas/:id" element={<TrilhaDetalhePage />} />
           <Route path="curso/:slug" element={<CursoPage />} />
           <Route path="suporte" element={<SuportePage />} />
           <Route path="configuracoes" element={<ConfiguracoesPage />} />
@@ -86,6 +89,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+      <CookieConsent />
     </BrowserRouter>
   );
 }
