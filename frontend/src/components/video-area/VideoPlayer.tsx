@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { VideoBlockerOverlay } from './VideoBlockerOverlay';
 import { ConsentService } from '../../services/consent';
+import { ProgressService } from '../../services/progress';
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -82,34 +83,21 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
   const speeds = [0.5, 1, 1.5, 2];
 
   const getProgress = useCallback(() => {
-    try {
-      const storage = JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
-      const email = localStorage.getItem('orcoma_user_email') || localStorage.getItem('orcoma_user_name') || 'guest';
-      const userKey = 'user_' + email.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      return storage.users?.[userKey]?.cursos?.[cursoId?.toString() || ''];
-    } catch { return null; }
+    if (!cursoId) return null;
+    return ProgressService.lerLocal(cursoId, undefined);
   }, [cursoId]);
 
   const saveProgress = useCallback((progresso: number) => {
     if (!cursoId || progresso <= 0 || progresso >= 100) return;
     const atual = getProgress();
     if (atual?.concluido) return;
-    try {
-      const storage = JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
-      const email = localStorage.getItem('orcoma_user_email') || localStorage.getItem('orcoma_user_name') || 'guest';
-      const userKey = 'user_' + email.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      if (!storage.users) storage.users = {};
-      if (!storage.users[userKey]) storage.users[userKey] = { cursos: {}, ultima_atualizacao: null };
-      const key = cursoId.toString();
-      storage.users[userKey].cursos[key] = {
-        concluido: false,
-        progresso: Math.max(atual?.progresso || 0, progresso),
-        ultima_atualizacao: new Date().toISOString(),
-        ultimo_segundo_assistido: Math.floor(ultimoTempoRef.current),
-      };
-      storage.users[userKey].ultima_atualizacao = new Date().toISOString();
-      localStorage.setItem('orcoma_progresso', JSON.stringify(storage));
-    } catch {}
+    const dados = {
+      concluido: false,
+      progresso: Math.max(atual?.progresso || 0, progresso),
+      ultima_atualizacao: new Date().toISOString(),
+      ultimo_segundo_assistido: Math.floor(ultimoTempoRef.current),
+    };
+    ProgressService.salvarProgresso(cursoId, undefined, dados);
   }, [cursoId, getProgress]);
 
   const markCompleted = useCallback(() => {

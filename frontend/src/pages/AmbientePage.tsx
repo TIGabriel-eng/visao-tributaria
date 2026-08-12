@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
+import { ProgressService } from '../services/progress';
 import type { Curso, DashboardData } from '../types';
 import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
 import leaoImg from '../assets/images/leão.png';
@@ -98,21 +99,18 @@ export function AmbientePage() {
 
   useEffect(() => {
     if (!cursos.length) return;
-    const progressStorage = JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
-    const email = AuthService.getEmail() || AuthService.getName() || 'guest';
-    const userKey = 'user_' + email.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const userData = progressStorage.users?.[userKey];
-    if (!userData) return;
-    const emAndamento = cursos.find((c) => {
-      const slug = c.slug || String(c.id);
-      const p = userData.cursos?.[slug] || userData.cursos?.['slug_' + slug];
-      return p && !p.concluido && p.progresso > 0 && p.progresso < 100;
-    });
-    if (emAndamento) {
-      const slug = emAndamento.slug || String(emAndamento.id);
-      const p = userData.cursos?.[slug] || userData.cursos?.['slug_' + slug];
-      setContinuar({ curso: emAndamento, progresso: p?.progresso || 0 });
-    }
+    ProgressService.getMapProgressos(cursos)
+      .then((mapa) => {
+        const emAndamento = cursos.find((c) => {
+          const p = mapa[String(c.id)];
+          return p && !p.concluido && p.progresso > 0 && p.progresso < 100;
+        });
+        if (emAndamento) {
+          const p = mapa[String(emAndamento.id)];
+          setContinuar({ curso: emAndamento, progresso: p?.progresso || 0 });
+        }
+      })
+      .catch(() => {});
   }, [cursos]);
 
   const animateCounter = useCallback((el: HTMLElement | null, target: number) => {

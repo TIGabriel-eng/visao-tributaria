@@ -1,31 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
+import { ProgressService } from '../services/progress';
 import type { Curso } from '../types';
 import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
+
+interface ProgressoMap {
+  [cursoId: string]: { progresso: number; concluido: boolean };
+}
 
 export function ContinuarAssistindoPage() {
   const navigate = useNavigate();
   const [cursos, setCursos] = useState<Curso[]>([]);
+  const [progressoMap, setProgressoMap] = useState<ProgressoMap>({});
 
   useEffect(() => {
     ApiService.getCursos().then((data) => setCursos(data || [])).catch(() => {});
   }, []);
 
-  const getProgress = (slug: string) => {
-    try {
-      const storage = JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
-      const email = AuthService.getEmail() || AuthService.getName() || 'guest';
-      const userKey = 'user_' + email.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      const userData = storage.users?.[userKey];
-      return userData?.cursos?.[slug] || userData?.cursos?.['slug_' + slug];
-    } catch { return null; }
-  };
+  useEffect(() => {
+    if (!cursos.length) return;
+    ProgressService.getMapProgressos(cursos)
+      .then((mapa) => {
+        const novoMapa: ProgressoMap = {};
+        Object.entries(mapa).forEach(([id, p]) => {
+          novoMapa[id] = { progresso: p?.progresso || 0, concluido: !!p?.concluido };
+        });
+        setProgressoMap(novoMapa);
+      })
+      .catch(() => {});
+  }, [cursos]);
 
   const emAndamento = cursos.filter((c) => {
-    const slug = c.slug || String(c.id);
-    const p = getProgress(slug);
+    const p = progressoMap[String(c.id)];
     return p && !p.concluido && p.progresso > 0 && p.progresso < 100;
   });
 
@@ -40,14 +47,12 @@ export function ContinuarAssistindoPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '800px', margin: '0 auto' }}>
           {emAndamento.map((c) => {
-            const slug = c.slug || String(c.id);
-            const p = getProgress(slug);
-            const progresso = p?.progresso || 0;
+            const p = progressoMap[String(c.id)];
             return (
               <div key={c.id} className="continuar-card">
                 <div className="continuar-card__thumb">
                   <img src={c.thumbnail_url || ''} alt={c.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <div className="continuar-card__play" onClick={() => navigate('/video-area/' + slug)}>
+                  <div className="continuar-card__play" onClick={() => navigate('/video-area/' + (c.slug || String(c.id)))}>
                     <i className="fa-solid fa-play"></i>
                   </div>
                 </div>
@@ -56,10 +61,10 @@ export function ContinuarAssistindoPage() {
                   <h3 className="continuar-card__title">{c.titulo}</h3>
                   <span className="continuar-card__progress-label">Progresso da Aula</span>
                   <div className="continuar-card__progress">
-                    <div className="continuar-card__bar"><div className="continuar-card__bar-fill" style={{ width: progresso + '%' }}></div></div>
-                    <span className="continuar-card__percent">{progresso}%</span>
+                    <div className="continuar-card__bar"><div className="continuar-card__bar-fill" style={{ width: (p?.progresso || 0) + '%' }}></div></div>
+                    <span className="continuar-card__percent">{(p?.progresso || 0)}%</span>
                   </div>
-                  <button className="continuar-card__btn" onClick={() => navigate('/video-area/' + slug)}>Retomar curso <i className="fa-solid fa-arrow-right"></i></button>
+                  <button className="continuar-card__btn" onClick={() => navigate('/video-area/' + (c.slug || String(c.id)))}>Retomar curso <i className="fa-solid fa-arrow-right"></i></button>
                 </div>
               </div>
             );

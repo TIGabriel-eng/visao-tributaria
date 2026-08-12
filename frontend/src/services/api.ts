@@ -294,8 +294,20 @@ export const ApiService = {
     return this.get('/api/matriculas/posicao/?curso=' + cursoId);
   },
 
+  async getStatusMatricula(cursoId: number | string) {
+    return this.get('/api/matriculas/status/?curso=' + cursoId);
+  },
+
+  async atualizarProgresso(cursoId: number, dados: any) {
+    return this.post('/api/matriculas/atualizar-progresso/', { curso: cursoId, ...dados });
+  },
+
   async concluirCurso(cursoId: number) {
     return this.post('/api/matriculas/concluir/', { curso: cursoId });
+  },
+
+  invalidate(pathPrefix: string) {
+    invalidateCache(pathPrefix);
   },
 
   // User Stats

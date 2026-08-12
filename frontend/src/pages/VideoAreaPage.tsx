@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ApiService } from '../services/api';
 import { AuthService } from '../services/auth';
+import { ProgressService } from '../services/progress';
 import { VideoPlayer } from '../components/video-area/VideoPlayer';
 import { LessonInfo } from '../components/video-area/LessonInfo';
 import { MaterialsList } from '../components/video-area/MaterialsList';
@@ -48,30 +49,10 @@ export function VideoAreaPage() {
   const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const getProgress = useCallback(() => {
-    try {
-      const storage = JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
-      const email = AuthService.getEmail() || AuthService.getName() || 'guest';
-      const userKey = 'user_' + email.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      return storage.users?.[userKey]?.cursos?.[cursoSlug || ''] || null;
-    } catch { return null; }
-  }, [cursoSlug]);
-
   const salvarProgressoLocalStorage = useCallback((dados: any) => {
-    try {
-      const storage = JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
-      const email = AuthService.getEmail() || AuthService.getName() || 'guest';
-      const userKey = 'user_' + email.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      if (!storage.users) storage.users = {};
-      if (!storage.users[userKey]) storage.users[userKey] = { cursos: {}, ultima_atualizacao: null };
-      const key = cursoSlug || '';
-      storage.users[userKey].cursos[key] = dados;
-      storage.users[userKey].ultima_atualizacao = new Date().toISOString();
-      storage.cursos = storage.users[userKey].cursos;
-      storage.ultima_atualizacao = storage.users[userKey].ultima_atualizacao;
-      localStorage.setItem('orcoma_progresso', JSON.stringify(storage));
-    } catch {}
-  }, [cursoSlug]);
+    if (!cursoSlug) return;
+    ProgressService.salvarProgresso(curso?.id ?? cursoSlug, cursoSlug, dados);
+  }, [curso?.id, cursoSlug]);
 
   const showToastMsg = useCallback((message: string, duration: number = 5000) => {
     setToastMessage(message);
@@ -192,7 +173,7 @@ export function VideoAreaPage() {
     setError(null);
 
     ApiService.getCursoModulos(cursoSlug)
-      .then((data: any) => {
+      .then(async (data: any) => {
         const cursoData = data.curso;
         const modulosData: Modulo[] = data.modulos || [];
 
@@ -206,7 +187,7 @@ export function VideoAreaPage() {
         setModulos(modulosData);
         document.title = cursoData.titulo + ' | Orcoma Academy';
 
-        const progress = getProgress();
+        const progress = await ProgressService.getProgresso(cursoData.id, cursoSlug);
         if (progress?.concluido) {
           cursoJaConcluidoRef.current = true;
         }
@@ -253,13 +234,13 @@ export function VideoAreaPage() {
           setActiveLesson(startLesson);
         }
 
-        setLoading(false);
+              setLoading(false);
       })
       .catch((err: any) => {
         setError(err?.message || 'Erro ao carregar curso');
         setLoading(false);
       });
-  }, [cursoSlug, getProgress]);
+  }, [cursoSlug]);
 
   useEffect(() => {
     if (!activeLesson || !curso) return;
