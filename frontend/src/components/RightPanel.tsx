@@ -72,7 +72,7 @@ export function RightPanel() {
     { max: 10, label: 'Iniciante', color: '#dc2626' },
     { max: 47, label: 'Razoável', color: '#eab308' },
     { max: 99, label: 'Bom', color: '#22c55e' },
-    { max: 100, label: 'Excelente', color: '#0073ff' },
+    { max: 100, label: 'Excelente', color: '#c6853a' },
   ];
   const tier = tiers.find((t) => progress <= t.max) || tiers[0];
 

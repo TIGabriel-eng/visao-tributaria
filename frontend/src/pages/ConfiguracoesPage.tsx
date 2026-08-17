@@ -25,7 +25,7 @@ export function ConfiguracoesPage() {
 
   return (
     <div style={{ padding: '12px 24px' }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '24px', color: '#ff9d00' }}>Configurações</h1>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '24px', color: '#191919' }}>Configurações</h1>
       <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>

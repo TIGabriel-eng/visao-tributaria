@@ -251,7 +251,7 @@ export function AmbientePage() {
         </div>
       </div>
 
-      <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: 'var(--color-text-primary)', margin: '16px 0 0', animation: 'fadeUp 1.5s ease both' }}>Continue Assistindo</h1>
+      <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: '#191919', margin: '16px 0 0', animation: 'fadeUp 1.5s ease both' }}>Continue Assistindo</h1>
 
       {continuar ? (
         <div className="continuar-card">

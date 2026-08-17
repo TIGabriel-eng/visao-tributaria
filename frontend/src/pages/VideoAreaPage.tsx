@@ -185,7 +185,7 @@ export function VideoAreaPage() {
 
         setCurso(cursoData);
         setModulos(modulosData);
-        document.title = cursoData.titulo + ' | Orcoma Academy';
+        document.title = cursoData.titulo + ' | Visão Tributária Academy';
 
         const progress = await ProgressService.getProgresso(cursoData.id, cursoSlug);
         if (progress?.concluido) {
@@ -456,18 +456,18 @@ export function VideoAreaPage() {
               {activeTab === 'sobre' && (
                 <div className="va-tab-content">
                   <div id="va-aboutContent">
-                    <p style={{ color: '#9ca3af', fontSize: '.84rem', lineHeight: 1.7, maxWidth: '600px' }}>
+                    <p style={{ color: '#191919', fontSize: '.84rem', lineHeight: 1.7, maxWidth: '600px' }}>
                       {curso.descricao || 'Nenhuma descrição disponível.'}
                     </p>
                     {modulos.map((m) => (
                       m.descricao ? (
                         <div key={m.id}>
                           <h4 style={{ color: '#e5e7eb', fontSize: '.82rem', margin: '16px 0 4px' }}>{m.titulo}</h4>
-                          <p style={{ color: '#9ca3af', fontSize: '.82rem', lineHeight: 1.6, margin: 0 }}>{m.descricao}</p>
+                          <p style={{ color: '#191919', fontSize: '.82rem', lineHeight: 1.6, margin: 0 }}>{m.descricao}</p>
                         </div>
                       ) : null
                     ))}
-                    <p style={{ color: '#6b7280', fontSize: '.76rem', marginTop: '12px' }}>
+                    <p style={{ color: '#191919', fontSize: '.76rem', marginTop: '12px' }}>
                       Tipo: {curso.tipo === 'video' ? 'Vídeo' : 'Curso'} · Status: {curso.status}
                     </p>
                   </div>

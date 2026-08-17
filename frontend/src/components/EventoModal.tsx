@@ -78,7 +78,7 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
         )}
         <div style={{ padding: '36.4px' }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.82rem', fontWeight: 700, marginBottom: '8px' }}>{evento.titulo || 'Evento'}</h2>
-          <p style={{ color: '#60a5fa', fontSize: '1.17rem', fontWeight: 600, marginBottom: '4px' }}>{formatFullDate(d)}</p>
+          <p style={{ color: 'var(--color-accent-2)', fontSize: '1.17rem', fontWeight: 600, marginBottom: '4px' }}>{formatFullDate(d)}</p>
           <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.105rem', marginBottom: '20.8px' }}>em {dias} {dias === 1 ? 'dia' : 'dias'}</p>
           {evento.url && (
             <p style={{ marginBottom: '20.8px' }}>
@@ -87,22 +87,22 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  color: '#3b82f6',
+                  color: 'var(--color-accent-2)',
                   fontWeight: 600,
                   textDecoration: 'underline',
                   textUnderlineOffset: '2px',
                   transition: 'color 0.2s, textDecorationColor 0.2s',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#2563eb';
-                  e.currentTarget.style.textDecorationColor = '#2563eb';
+                  e.currentTarget.style.color = '#A37448';
+                  e.currentTarget.style.textDecorationColor = '#A37448';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#3b82f6';
-                  e.currentTarget.style.textDecorationColor = '#3b82f6';
+                  e.currentTarget.style.color = 'var(--color-accent-2)';
+                  e.currentTarget.style.textDecorationColor = 'var(--color-accent-2)';
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.outline = '2px solid #3b82f6';
+                  e.currentTarget.style.outline = '2px solid var(--color-accent-2)';
                   e.currentTarget.style.outlineOffset = '2px';
                   e.currentTarget.style.borderRadius = '2px';
                 }}
@@ -127,7 +127,7 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
                 alignItems: 'center',
                 gap: '10.4px',
                 padding: '13px 26px',
-                background: 'linear-gradient(135deg, var(--color-accent-2), #2563eb)',
+                background: 'linear-gradient(135deg, var(--color-accent-2), #A37448)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 'var(--radius-full)',

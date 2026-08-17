@@ -42,7 +42,7 @@ export function EventosPage() {
 
   return (
     <div style={{ padding: '12px 24px' }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#ff9d00' }}>Eventos</h1>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#191919' }}>Eventos</h1>
       {eventos.length === 0 ? (
         <div className="events-empty" style={{ textAlign: 'center', padding: '40px 0' }}>
           <i className="ti ti-calendar-off" style={{ fontSize: '2rem', marginBottom: '8px', display: 'block' }}></i>
@@ -69,17 +69,17 @@ export function EventosPage() {
                   maxWidth: '900px',
                   minHeight: '83px',
                   padding: '16px',
-                  background: 'rgba(59, 130, 246, 0.08)',
-                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.4) 100%), #512614',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: 'var(--radius-lg)',
                   cursor: 'pointer',
                   transition: 'background 0.2s, border-color 0.2s',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)'; e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.4)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.08)'; e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.2)'; }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.5) 100%), #512614'; e.currentTarget.style.borderColor = 'rgba(240, 169, 59, 0.4)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.4) 100%), #512614'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'; }}
               >
-                <div className="events-list__date" style={{ background: 'rgba(59, 130, 246, 0.15)' }}>
-                  <span className="events-list__month" style={{ color: '#60a5fa' }}>{mes}</span>
+                <div className="events-list__date" style={{ background: 'rgba(255, 255, 255, 0.12)' }}>
+                  <span className="events-list__month" style={{ color: '#F0A93B' }}>{mes}</span>
                   <span className="events-list__day">{dia}</span>
                 </div>
                 <div className="events-list__info">
@@ -89,8 +89,8 @@ export function EventosPage() {
                 <span style={{
                   fontSize: '0.7rem',
                   fontWeight: 600,
-                  color: dias <= 7 ? '#60a5fa' : '#93c5fd',
-                  background: 'rgba(59, 130, 246, 0.12)',
+                  color: dias <= 7 ? '#F0A93B' : '#E8B167',
+                  background: 'rgba(255, 255, 255, 0.12)',
                   padding: '4px 10px',
                   borderRadius: 'var(--radius-full)',
                   whiteSpace: 'nowrap',
@@ -98,7 +98,7 @@ export function EventosPage() {
                 }}>
                   em {dias} {dias === 1 ? 'dia' : 'dias'}
                 </span>
-                <i className="ti ti-chevron-right events-list__arrow" style={{ color: '#60a5fa' }}></i>
+                <i className="ti ti-chevron-right events-list__arrow" style={{ color: '#C9BDA3' }}></i>
               </div>
             );
           })}

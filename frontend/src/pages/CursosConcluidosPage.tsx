@@ -25,7 +25,7 @@ export function CursosConcluidosPage() {
 
   return (
     <div style={{ padding: '12px 24px' }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#ff9d00' }}>Cursos Concluídos</h1>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#191919' }}>Cursos Concluídos</h1>
       {concluidos.length === 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 12px' }}>
           <img src={cursoNaoConcluidoImg} alt="Nenhum curso concluído" style={{ maxWidth: '160px', marginBottom: '16px' }} />

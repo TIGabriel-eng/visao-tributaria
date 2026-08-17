@@ -8,12 +8,10 @@ import type { Curso, Evento, Trilha, DashboardData, Ambiente } from '../types';
 import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
 import banner1 from '../assets/images/banner1.png';
 import banner2 from '../assets/images/banner2.png';
-import banner3 from '../assets/images/banner3.png';
 
 const heroSlides = [
   { src: banner1, alt: 'Banner Orcoma Academy 1' },
   { src: banner2, alt: 'Banner Orcoma Academy 2' },
-  { src: banner3, alt: 'Banner Orcoma Academy 3' },
 ];
 
 const ACADEMY_DESC_BY_PATH: Record<string, string> = {
@@ -232,7 +230,7 @@ export function HomePage() {
         <a href="/meus-cursos" className="btn-hero">Explorar conteúdos <i className="fa-solid fa-arrow-right"></i></a>
       </div>
 
-      <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: 'var(--color-text-primary)', margin: '8px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Seu Ambiente de Aprendizagem</h1>
+      <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: '#191919', margin: '8px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Seu Ambiente de Aprendizagem</h1>
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '16px', justifyContent: 'center' }}>
         {getChildAcademies(AuthService.getCurrentAcademy()).map((academy) => {
           const ambiente =
@@ -270,7 +268,7 @@ export function HomePage() {
       </div>
 
       <div className="section__header" style={{ margin: '16px 0 0', animation: 'fadeUp 1.5s ease both' }}>
-        <h2 className="section__title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px' }}>Continue Assistindo</h2>
+        <h2 className="section__title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', color: '#191919' }}>Continue Assistindo</h2>
         <a href="/continuar-assistindo" className="section__link">Ver todos</a>
       </div>
 
@@ -333,7 +331,7 @@ export function HomePage() {
         </section>
       </div>
 
-      <h1 className="section-tittle" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: 'var(--color-text-primary)', margin: '16px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Curso Recomendado para você!</h1>
+      <h1 className="section-tittle" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: '#191919', margin: '16px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Curso Recomendado para você!</h1>
       {!cursosLoaded ? (
         <div className="cursos-grid" style={{ animation: 'fadeUp 1.5s ease both' }}>
           <div className="curso-card">

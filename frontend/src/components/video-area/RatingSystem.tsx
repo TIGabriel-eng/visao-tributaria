@@ -14,7 +14,7 @@ function corDoNome(nome: string): string {
   for (let i = 0; i < nome.length; i++) {
     hash = nome.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const colors = ['#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
+  const colors = ['#f59e0b', '#c6853a', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#8a4d23', '#84cc16'];
   return colors[Math.abs(hash) % colors.length];
 }
 

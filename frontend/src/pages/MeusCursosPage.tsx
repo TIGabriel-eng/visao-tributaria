@@ -22,7 +22,7 @@ export function MeusCursosPage() {
 
   return (
     <div style={{ padding: '12px 24px' }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#ff9d00' }}>Meus Cursos</h1>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#191919' }}>Meus Cursos</h1>
       {cursos.length === 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 12px' }}>
           <img src={nenhumCursoImg} alt="Nenhum curso" style={{ maxWidth: '70px', marginBottom: '16px' }} />

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { NAV_ITEMS, ACADEMIES, MAIN_ACADEMIES } from '../types';
 import type { AcademyConfig } from '../types';
-import logoImage from '../assets/images/LOGO ORCOMA ACADEMY.png';
+import logoImage from '../assets/images/visão-logo.png';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -89,7 +89,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     <>
       <aside className={`sidebar ${isOpen ? 'is-open' : ''}`} id="sidebar">
         <div className="sidebar__logo">
-          <img src={logoImage} alt="Orcoma Academy" className="sidebar__logo-img" />
+          <img src={logoImage} alt="Visão Academy" className="sidebar__logo-img" />
         </div>
 
         <nav className="sidebar__nav">

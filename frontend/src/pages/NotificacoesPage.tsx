@@ -45,7 +45,7 @@ export function NotificacoesPage() {
 
   const getIconColor = (tipo: string) => {
     switch (tipo) {
-      case 'boas_vindas': return '#60a5fa';
+      case 'boas_vindas': return '#7A5230';
       case 'curso_concluido': return '#f59e0b';
       case 'evento': return '#34d399';
       default: return 'var(--color-text-muted)';
@@ -55,13 +55,13 @@ export function NotificacoesPage() {
   return (
     <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.6rem', fontWeight: 700 }}>Notificações</h1>
+        <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.6rem', fontWeight: 700, color: '#191919' }}>Notificações</h1>
         {notificacoes.some((n) => !n.lida) && (
           <button
             onClick={handleMarcarTodasLidas}
             style={{
-              background: 'rgba(59, 130, 246, 0.1)',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
+              background: 'rgba(122, 82, 48, 0.1)',
+              border: '1px solid rgba(122, 82, 48, 0.2)',
               color: 'var(--color-accent)',
               padding: '8px 16px',
               borderRadius: 'var(--radius-full)',
@@ -96,20 +96,20 @@ export function NotificacoesPage() {
                 gap: '14px',
                 padding: '18px 20px',
                 cursor: 'pointer',
-                background: n.lida ? 'var(--color-surface)' : 'rgba(59, 130, 246, 0.06)',
+                background: n.lida ? 'var(--color-surface)' : 'rgba(122, 82, 48, 0.06)',
                 border: '1px solid var(--color-border)',
                 borderRadius: 'var(--radius-lg)',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = n.lida ? 'var(--color-surface)' : 'rgba(59, 130, 246, 0.06)'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(122, 82, 48, 0.1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = n.lida ? 'var(--color-surface)' : 'rgba(122, 82, 48, 0.06)'; }}
             >
               <div
                 style={{
                   width: '42px',
                   height: '42px',
                   borderRadius: '50%',
-                  background: 'rgba(59, 130, 246, 0.1)',
+                  background: 'rgba(122, 82, 48, 0.1)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -128,7 +128,7 @@ export function NotificacoesPage() {
                         width: '8px',
                         height: '8px',
                         borderRadius: '50%',
-                        background: '#3b82f6',
+                        background: '#7A5230',
                         marginLeft: '8px',
                         verticalAlign: 'middle',
                       }} />

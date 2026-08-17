@@ -65,7 +65,7 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
 
   const getIconColor = (tipo: string) => {
     switch (tipo) {
-      case 'boas_vindas': return '#60a5fa';
+      case 'boas_vindas': return '#7A5230';
       case 'curso_concluido': return '#f59e0b';
       case 'evento': return '#34d399';
       default: return 'var(--color-text-muted)';
@@ -104,7 +104,7 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
           borderBottom: '1px solid var(--color-border)',
         }}
       >
-        <span style={{ fontWeight: 700, fontSize: '1rem' }}>Notificações</span>
+        <span style={{ fontWeight: 700, fontSize: '1rem', color: '#191919' }}>Notificações</span>
         {notificacoes.some((n) => !n.lida) && (
           <button
             onClick={handleMarcarTodasLidas}
@@ -144,19 +144,19 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
                 gap: '12px',
                 padding: '14px 20px',
                 cursor: 'pointer',
-                background: n.lida ? 'transparent' : 'rgba(59, 130, 246, 0.06)',
+                background: n.lida ? 'transparent' : 'rgba(122, 82, 48, 0.06)',
                 borderBottom: '1px solid var(--color-border)',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = n.lida ? 'transparent' : 'rgba(59, 130, 246, 0.06)'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(122, 82, 48, 0.1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = n.lida ? 'transparent' : 'rgba(122, 82, 48, 0.06)'; }}
             >
               <div
                 style={{
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  background: 'rgba(59, 130, 246, 0.1)',
+                  background: 'rgba(122, 82, 48, 0.1)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -176,7 +176,7 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
                         width: '8px',
                         height: '8px',
                         borderRadius: '50%',
-                        background: '#3b82f6',
+                        background: '#7A5230',
                         flexShrink: 0,
                       }}
                     />

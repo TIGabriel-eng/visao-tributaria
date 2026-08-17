@@ -120,8 +120,8 @@ export function Layout() {
       return items.map(e => renderSearchCard({
         type: 'evento',
         icon: 'fa-regular fa-calendar',
-        iconBg: 'rgba(59,130,246,0.12)',
-        iconColor: '#3b82f6',
+        iconBg: 'rgba(122,82,48,0.12)',
+        iconColor: '#7A5230',
         title: e.titulo || 'Evento',
         meta: 'Evento • ' + (e.data || ''),
       }));
@@ -144,8 +144,8 @@ export function Layout() {
     filtered.cursos.forEach(c => items.push({
       type: 'curso',
       icon: 'fa-solid fa-book',
-      iconBg: 'rgba(59,130,246,0.12)',
-      iconColor: '#3b82f6',
+      iconBg: 'rgba(122,82,48,0.12)',
+      iconColor: '#7A5230',
       title: c.titulo,
       meta: 'Curso',
       slug: c.slug || String(c.id),

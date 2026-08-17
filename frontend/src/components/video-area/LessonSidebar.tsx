@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../../services/auth';
 import { ACADEMIES } from '../../types';
 import type { Modulo, Material } from '../../types';
-import logoImage from '../../assets/images/LOGO ORCOMA ACADEMY.png';
+import logoImage from '../../assets/images/visão-logo.png';
 
 interface LessonSidebarProps {
   cursoTitulo: string;
@@ -36,7 +36,7 @@ export function LessonSidebar({
   return (
     <aside className="va-sidebar">
       <button className="va-sidebar__logo" onClick={handleLogoClick} aria-label="Voltar para a página inicial">
-        <img src={logoImage} alt="Orcoma Academy" />
+        <img src={logoImage} alt="Visão Academy" />
       </button>
 
       <div className="va-sidebar__header">

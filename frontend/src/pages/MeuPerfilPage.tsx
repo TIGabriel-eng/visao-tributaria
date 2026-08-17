@@ -14,7 +14,7 @@ const PLANO_MAP: Record<string, string> = {
 function corDoNome(nome: string) {
   let hash = 0;
   for (let i = 0; i < nome.length; i++) hash = nome.charCodeAt(i) + ((hash << 5) - hash);
-  const colors = ['#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
+  const colors = ['#f59e0b', '#c6853a', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#8a4d23', '#84cc16'];
   return colors[Math.abs(hash) % colors.length];
 }
 
@@ -360,16 +360,16 @@ export function MeuPerfilPage() {
               {!dadosPessoaisEditando ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div>
-                    <span style={{ color: '#888', fontSize: '12px' }}>Nome completo</span>
-                    <p style={{ margin: 0, color: '#fff' }}>{profile.first_name} {profile.last_name}</p>
+                    <span style={{ color: 'var(--color-text-secondary)', fontSize: '12px' }}>Nome completo</span>
+                    <p style={{ margin: 0, color: 'var(--color-text-primary)' }}>{profile.first_name} {profile.last_name}</p>
                   </div>
                   <div>
-                    <span style={{ color: '#888', fontSize: '12px' }}>CPF</span>
-                    <p style={{ margin: 0, color: '#fff' }}>{profile.cpf || '—'}</p>
+                    <span style={{ color: 'var(--color-text-secondary)', fontSize: '12px' }}>CPF</span>
+                    <p style={{ margin: 0, color: 'var(--color-text-primary)' }}>{profile.cpf || '—'}</p>
                   </div>
                   <div>
-                    <span style={{ color: '#888', fontSize: '12px' }}>CNPJ</span>
-                    <p style={{ margin: 0, color: '#fff' }}>{profile.cnpj || '—'}</p>
+                    <span style={{ color: 'var(--color-text-secondary)', fontSize: '12px' }}>CNPJ</span>
+                    <p style={{ margin: 0, color: 'var(--color-text-primary)' }}>{profile.cnpj || '—'}</p>
                   </div>
                   <button className="formacao-btn" onClick={iniciarEdicaoDadosPessoais}>
                     <i className="fa-solid fa-pencil"></i> Editar dados
@@ -525,7 +525,7 @@ export function MeuPerfilPage() {
       {composerOpen && (
         <div className="sobre-composer-overlay" onClick={() => setComposerOpen(false)}>
           <div className="sobre-composer" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '12px' }}>Sobre você</h3>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '12px' }}>Sobre você</h3>
             <textarea
               className="sobre-card__textarea"
               maxLength={6000}
@@ -548,7 +548,7 @@ export function MeuPerfilPage() {
       {formacaoModalOpen && (
         <div className="sobre-composer-overlay" onClick={() => setFormacaoModalOpen(false)}>
           <div className="sobre-composer" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '12px' }}>{formacaoEditId ? 'Editar Formação' : 'Adicionar Formação'}</h3>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '12px' }}>{formacaoEditId ? 'Editar Formação' : 'Adicionar Formação'}</h3>
             <form onSubmit={handleFormacaoSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div className="settings-field">
                 <label className="settings-field__label">Instituição</label>
@@ -615,7 +615,7 @@ export function MeuPerfilPage() {
       {habilidadeModalOpen && (
         <div className="sobre-composer-overlay" onClick={() => setHabilidadeModalOpen(false)}>
           <div className="sobre-composer" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '12px' }}>Adicionar Habilidade</h3>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '12px' }}>Adicionar Habilidade</h3>
             <form onSubmit={handleHabilidadeAdd} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div className="settings-field">
                 <label className="settings-field__label">Nome da habilidade</label>

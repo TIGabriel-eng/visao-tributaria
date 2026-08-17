@@ -41,8 +41,8 @@ export function TrilhaDetalhePage() {
         <button
           onClick={() => navigate('/trilhas')}
           style={{
-            marginTop: '16px', padding: '10px 18px', borderRadius: '8px', border: '1px solid #2563eb',
-            background: 'rgba(37, 99, 235, 0.12)', color: '#60a5fa', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+            marginTop: '16px', padding: '10px 18px', borderRadius: '8px', border: '1px solid var(--color-accent-2)',
+            background: 'rgba(122, 82, 48, 0.12)', color: 'var(--color-accent-2)', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
           }}
         >
           ← Voltar para Trilhas
@@ -126,7 +126,7 @@ const thumbPlaceholderStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background: 'linear-gradient(135deg, #6d28d9 0%, #1a3d6e 100%)',
+  background: 'linear-gradient(135deg, #5C3418 0%, #3D1E0D 100%)',
   color: 'rgba(255,255,255,.35)',
   fontSize: '32px',
 };

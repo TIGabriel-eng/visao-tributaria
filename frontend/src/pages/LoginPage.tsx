@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
-import logoImage from '../assets/images/LOGO ORCOMA ACADEMY.png';
+import logoImage from '../assets/images/visão-logo.png';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export function LoginPage() {
         if (el.childElementCount > 0) return;
         recaptchaIds.current[key] = -1;
       }
-      recaptchaIds.current[key] = w.grecaptcha.render(`recaptcha-${key}`, { sitekey: siteKey, theme: 'dark', size: 'normal' });
+      recaptchaIds.current[key] = w.grecaptcha.render(`recaptcha-${key}`, { sitekey: siteKey, theme: 'light', size: 'normal' });
     });
   };
 
@@ -178,7 +178,7 @@ export function LoginPage() {
       <div className="login-left">
         <img
           src={logoImage}
-          alt="Orcoma Academy"
+          alt="Visão Academy"
           className="login-left__logo"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />

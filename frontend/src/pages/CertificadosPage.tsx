@@ -11,6 +11,10 @@ interface Certificado {
   download_url: string;
 }
 
+function abrirCertificado(url: string) {
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
 export function CertificadosPage() {
   const [certificados, setCertificados] = useState<Certificado[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,8 +27,8 @@ export function CertificadosPage() {
   }, []);
 
   return (
-    <div style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.6rem', fontWeight: 700, marginBottom: '24px' }}>Meus Certificados</h1>
+    <div style={{ padding: '12px 24px' }}>
+      <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#191919' }}>Meus Certificados</h1>
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--color-text-muted)' }}>
@@ -38,67 +42,30 @@ export function CertificadosPage() {
           <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>Complete cursos para gerar certificados</p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="cursos-grid">
           {certificados.map((cert) => (
             <div
               key={cert.id}
-              style={{
-                background: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '20px 24px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-              }}
+              className="curso-card"
+              onClick={() => abrirCertificado(cert.download_url)}
             >
-              <div
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: 'var(--radius-lg)',
-                  background: 'rgba(245, 158, 11, 0.15)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <i className="fa-solid fa-certificate" style={{ color: '#f59e0b', fontSize: '1.3rem' }}></i>
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '2px' }}>{cert.curso_titulo}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                  Emitido em {new Date(cert.emitido_em).toLocaleDateString('pt-BR')}
-                  {cert.curso_duracao && ` · ${cert.curso_duracao}`}
+              <div className="curso-card__image">
+                <div className="cert-thumb">
+                  <span className="cert-thumb__badge"><i className="fa-solid fa-award"></i> Certificado</span>
+                  <span className="cert-thumb__course">{cert.curso_titulo}</span>
+                  <span className="cert-thumb__name">{cert.aluno_nome}</span>
+                  <span className="cert-thumb__code">Código: {cert.codigo}</span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                  Código: {cert.codigo}
-                </div>
+                <span className="curso-card__status status-concluido">Concluído</span>
               </div>
-              <a
-                href={cert.download_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 18px',
-                  background: 'linear-gradient(135deg, var(--color-accent-2), #2563eb)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 'var(--radius-full)',
-                  fontWeight: 600,
-                  fontSize: '0.8rem',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-              >
-                <i className="fa-solid fa-download"></i> Download
-              </a>
+              <div className="curso-card__name">{cert.curso_titulo}</div>
+              <div className="curso-card__divider"></div>
+              <div className="curso-card__meta">
+                <span><i className="fa-solid fa-calendar"></i> {new Date(cert.emitido_em).toLocaleDateString('pt-BR')}</span>
+                <span className="certificado-link" onClick={(e) => { e.stopPropagation(); abrirCertificado(cert.download_url); }}>
+                  <i className="fa-solid fa-download"></i> Baixar
+                </span>
+              </div>
             </div>
           ))}
         </div>
