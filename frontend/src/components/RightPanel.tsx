@@ -95,7 +95,7 @@ export function RightPanel() {
             </span>
             {role === 'admin' && (
               <div className="admin-dropdown" id="adminDropdown">
-                <a href="https://orcoma-academy-backend.onrender.com/admin/" target="_blank" className="admin-dropdown__item">
+                <a href="https://dashboard-visao.onrender.com/admin/" target="_blank" className="admin-dropdown__item">
                   <i className="fa-solid fa-shield-halved"></i> Painel Administrativo
                 </a>
               </div>

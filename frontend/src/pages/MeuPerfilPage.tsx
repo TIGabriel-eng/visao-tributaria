@@ -4,9 +4,9 @@ import { ApiService } from '../services/api';
 
 const PLANO_MAP: Record<string, string> = {
   admin: 'Administrador',
-  cliente_orcoma: 'Cliente Orcoma',
-  colaborador_orcoma: 'Orcoma Team',
-  gestor_orcoma: 'Orcoma Business',
+  cliente_orcoma: 'Cliente Visão',
+  colaborador_orcoma: 'Visão Team',
+  gestor_orcoma: 'Visão Business',
   empresario: 'Empresário',
   visitor: 'Visitante',
 };

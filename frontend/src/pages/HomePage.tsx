@@ -10,15 +10,15 @@ import banner1 from '../assets/images/banner1.png';
 import banner2 from '../assets/images/banner2.png';
 
 const heroSlides = [
-  { src: banner1, alt: 'Banner Orcoma Academy 1' },
-  { src: banner2, alt: 'Banner Orcoma Academy 2' },
+  { src: banner1, alt: 'Banner Visão Academy 1' },
+  { src: banner2, alt: 'Banner Visão Academy 2' },
 ];
 
 const ACADEMY_DESC_BY_PATH: Record<string, string> = {
   '/time':
     'Treinamentos práticos que ajudem os colaboradores das empresas cliente a melhorarem sua performance no dia a dia.',
   '/orcomakers':
-    'Treinamentos internos dos colaboradores da Orcoma Contabilidade, com o objetivo de padronizar os processos, desenvolver habilidades e fortalecer a cultura.',
+    'Treinamentos internos dos colaboradores da Visão Tributária, com o objetivo de padronizar os processos, desenvolver habilidades e fortalecer a cultura.',
   '/contabil':
     'Destinada a conteúdos técnicos, atualizações contábeis, fiscais, tributárias, trabalhistas e orientações importantes relacionadas à rotina empresarial.',
   '/empresarial':

@@ -44,7 +44,7 @@ const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
   orcomakers: {
     name: 'Academy Orcomakers',
     tagLabel: 'Academy Orcomakers',
-    description: 'o seu ambiente de aprendizagem Orcomakers.',
+    description: 'o seu ambiente de aprendizagem Visão.',
     backTo: '/team',
     backLabel: 'Voltar',
     parentKey: 'Academy Team',

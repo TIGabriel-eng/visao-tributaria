@@ -2,7 +2,7 @@ import { AuthService } from './auth';
 
 declare const API: any;
 
-const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://orcoma-academy-backend.onrender.com');
+const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '' : 'https://dashboard-visao.onrender.com');
 
 const CACHE_TTL = 5 * 60 * 1000;
 const CACHEABLE_PATHS = [

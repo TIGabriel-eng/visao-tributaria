@@ -164,9 +164,9 @@ export const NAV_ITEMS = [
 
 export const PLANO_MAP: Record<string, string> = {
   'cliente_premium': 'Cliente Premium ⭐',
-  'cliente_orcoma': 'Cliente Orcoma',
-  'colaborador_orcoma': 'Orcoma Team',
-  'gestor_orcoma': 'Orcoma Business',
+  'cliente_orcoma': 'Cliente Visão',
+  'colaborador_orcoma': 'Visão Team',
+  'gestor_orcoma': 'Visão Business',
   'admin': 'Administrador',
   'empresario': 'Empresário',
   'visitor': 'Visitante',
