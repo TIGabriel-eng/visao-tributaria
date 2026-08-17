@@ -1,4 +1,4 @@
-# ORCOMA ACADEMY
+# VISÃO ACADEMY
 
 Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack composta por um **frontend SPA em React + TypeScript + Vite** e um **backend em Django REST Framework**. A plataforma oferece cursos, trilhas, eventos, certificados, metas semanais de estudo, notificações e controle de acesso por papel (role-based) com múltiplas academias.
 
