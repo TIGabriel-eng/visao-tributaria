@@ -66,14 +66,6 @@ export function AmbientePage() {
   const navigate = useNavigate();
   const config = AMBIENTE_CONFIGS[ambiente] || AMBIENTE_CONFIGS.time;
 
-  const backendNome = AMBIENTE_PATH_TO_NAME[ambiente];
-  const ambienteData =
-    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(backendNome || '')) ||
-    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(config.name));
-  const displayName = ambienteData?.nome || config.name;
-  const displayTag = ambienteData?.nome || config.tagLabel;
-  const displayDesc = ambienteData?.descricao?.trim() || config.description;
-
   const [userName, setUserName] = useState('Usuário');
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [ambientes, setAmbientes] = useState<Ambiente[]>([]);
@@ -83,6 +75,13 @@ export function AmbientePage() {
   const [metaModalOpen, setMetaModalOpen] = useState(false);
   const [selectedDays, setSelectedDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
   const [hoursPerDay, setHoursPerDay] = useState<number>(1);
+
+  const backendNome = AMBIENTE_PATH_TO_NAME[ambiente];
+  const ambienteData =
+    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(backendNome || '')) ||
+    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(config.name));
+  const displayTag = ambienteData?.nome || config.tagLabel;
+  const displayDesc = ambienteData?.descricao?.trim() || config.description;
 
   useEffect(() => {
     const name = AuthService.getName() || 'Usuário';
