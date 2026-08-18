@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { VideoBlockerOverlay } from './VideoBlockerOverlay';
 import { ConsentService } from '../../services/consent';
 import { ProgressService } from '../../services/progress';
+import { ApiService } from '../../services/api';
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -12,12 +13,13 @@ interface VideoPlayerProps {
   onResumeAt?: (seconds: number) => void;
 }
 
-type VideoType = 'youtube' | 'vimeo' | 'html5' | 'unknown';
+type VideoType = 'youtube' | 'vimeo' | 'onedrive' | 'html5' | 'unknown';
 
 function detectVideoType(url: string): VideoType {
   if (!url) return 'unknown';
   if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
   if (url.includes('vimeo.com')) return 'vimeo';
+  if (url.includes('1drv.ms') || url.includes('onedrive.live.com') || url.includes('sharepoint.com')) return 'onedrive';
   return 'html5';
 }
 
@@ -69,6 +71,8 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
   const [ytPrompt, setYtPrompt] = useState(false);
   const [ytError, setYtError] = useState(false);
   const [ytAttempt, setYtAttempt] = useState(0);
+  const [onedriveEmbedUrl, setOnedriveEmbedUrl] = useState('');
+  const [onedriveLoading, setOnedriveLoading] = useState(false);
 
   const tempoAssistidoRef = useRef(0);
   const ultimoTempoRef = useRef(0);
@@ -380,6 +384,22 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
     };
   }, [videoType, videoUrl, saveProgress, onProgress, markCompleted]);
 
+  useEffect(() => {
+    if (videoType !== 'onedrive') return;
+    setOnedriveLoading(true);
+    setOnedriveEmbedUrl('');
+    ApiService.resolveOnedriveUrl(videoUrl)
+      .then((data) => {
+        setOnedriveEmbedUrl(data.embed_url);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setOnedriveEmbedUrl(videoUrl);
+        setIsLoading(false);
+      })
+      .finally(() => setOnedriveLoading(false));
+  }, [videoType, videoUrl]);
+
   const togglePlay = useCallback(() => {
     const playing = isPlayingRef.current;
     if (videoType === 'html5' && videoRef.current) {
@@ -681,6 +701,27 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
       );
     }
 
+    if (videoType === 'onedrive') {
+      if (onedriveLoading) {
+        return (
+          <div className="va-no-video">
+            <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '2rem', marginBottom: '12px', opacity: 0.4 }} />
+            <span>Carregando vídeo do OneDrive...</span>
+          </div>
+        );
+      }
+      const src = onedriveEmbedUrl || videoUrl;
+      return (
+        <iframe
+          ref={iframeRef}
+          src={src}
+          title={title}
+          allow="autoplay; fullscreen"
+          style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, border: 'none' }}
+        />
+      );
+    }
+
     if (videoType === 'html5') {
       return (
         <video
@@ -707,6 +748,7 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
 
   const canControlVideo =
     videoType !== 'unknown' &&
+    videoType !== 'onedrive' &&
     !isLoading &&
     !ytError &&
     (videoType !== 'youtube' || ytAllowed) &&
@@ -748,6 +790,25 @@ export function VideoPlayer({ videoUrl, title, cursoId, onProgress, onEnded }: V
             <span className="va-tab-pause-badge__text">Vídeo pausado — troca de aba detectada</span>
           </div>
         </div>
+      )}
+
+      {videoType === 'onedrive' && !showCompletedOverlay && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); if (onEnded) onEnded(); }}
+          style={{
+            position: 'absolute', bottom: '16px', right: '16px', zIndex: 20,
+            background: 'rgba(0,0,0,0.75)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)',
+            borderRadius: '8px', padding: '10px 18px', cursor: 'pointer',
+            fontSize: '0.85rem', fontWeight: 600, backdropFilter: 'blur(4px)',
+            transition: 'background 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(34,197,94,0.85)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.75)')}
+        >
+          <i className="fa-solid fa-check" style={{ marginRight: '6px' }} />
+          Marcar como concluída
+        </button>
       )}
 
       {isLoading && (

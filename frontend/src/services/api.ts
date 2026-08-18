@@ -306,6 +306,10 @@ export const ApiService = {
     return this.post('/api/matriculas/concluir/', { curso: cursoId });
   },
 
+  async resolveOnedriveUrl(url: string) {
+    return this.get('/api/onedrive/embed-url/?url=' + encodeURIComponent(url));
+  },
+
   invalidate(pathPrefix: string) {
     invalidateCache(pathPrefix);
   },

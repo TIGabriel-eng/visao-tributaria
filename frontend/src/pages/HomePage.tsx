@@ -240,22 +240,22 @@ export function HomePage() {
           const descricao =
             ambiente?.descricao?.trim() || ACADEMY_DESC_BY_PATH[academy.path] || '';
           return (
-            <a key={academy.path} href={academy.path} className="ambiente-card" data-academy={academy.name}
+            <a key={academy.path} href={academy.path} className="ambiente-card" data-academy={ambiente?.nome || academy.name}
               onClick={(e) => { e.preventDefault(); navigate(academy.path); }}
             >
               <div className="ambiente-card__image">
                 {thumb ? (
-                  <img src={thumb} alt={academy.name} loading="lazy" />
+                  <img src={thumb} alt={ambiente?.nome || academy.name} loading="lazy" />
                 ) : (
                   <div className="ambiente-card__placeholder">
-                    <span>{academy.name.charAt(0)}</span>
+                    <span>{(ambiente?.nome || academy.name).charAt(0)}</span>
                   </div>
                 )}
                 <span className="ambiente-card__badge">Ambiente</span>
                 <span className="ambiente-card__ribbon">NOVO</span>
               </div>
               <div className="ambiente-card__info">
-                <h3>{academy.name}</h3>
+                <h3>{ambiente?.nome || academy.name}</h3>
                 <div className="ambiente-card__divider"></div>
                 <p className="ambiente-card__desc">{descricao}</p>
                 <div className="ambiente-card__meta">
@@ -331,7 +331,7 @@ export function HomePage() {
         </section>
       </div>
 
-      <h1 className="section-tittle" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: '#191919', margin: '16px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Curso Recomendado para você!</h1>
+      <h1 className="section-tittle" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: '#191919', margin: '16px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Cursos Recomendados para você!</h1>
       {!cursosLoaded ? (
         <div className="cursos-grid" style={{ animation: 'fadeUp 1.5s ease both' }}>
           <div className="curso-card">
@@ -342,7 +342,7 @@ export function HomePage() {
         </div>
       ) : recomendados.length > 0 && (
         <div className="cursos-grid" style={{ animation: 'fadeUp 1.5s ease both' }}>
-          {recomendados.slice(0, 1).map((c) => {
+          {recomendados.slice(0, 5).map((c) => {
             const slug = c.slug || c.id;
             const thumb = c.thumbnail_url || '';
             const isConcluido = (c as any).status_matricula === 'concluido';

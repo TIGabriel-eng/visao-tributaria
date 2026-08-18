@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
 import { ProgressService } from '../services/progress';
-import type { Curso, DashboardData } from '../types';
+import type { Curso, DashboardData, Ambiente } from '../types';
 import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
 import leaoImg from '../assets/images/leão.png';
 
@@ -51,14 +51,32 @@ const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
   },
 };
 
+const AMBIENTE_PATH_TO_NAME: Record<string, string> = {
+  contabil: 'Academy Contábil',
+  empresarial: 'Academy Gestão Empresarial',
+  time: 'Academy Team',
+  orcomakers: 'Academy Orcomakers',
+};
+
+const normalizeNome = (s: string) => s.trim().toLowerCase();
+
 export function AmbientePage() {
   const { pathname } = useLocation();
   const ambiente = pathname.split('/').filter(Boolean).pop() || '';
   const navigate = useNavigate();
   const config = AMBIENTE_CONFIGS[ambiente] || AMBIENTE_CONFIGS.time;
 
+  const backendNome = AMBIENTE_PATH_TO_NAME[ambiente];
+  const ambienteData =
+    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(backendNome || '')) ||
+    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(config.name));
+  const displayName = ambienteData?.nome || config.name;
+  const displayTag = ambienteData?.nome || config.tagLabel;
+  const displayDesc = ambienteData?.descricao?.trim() || config.description;
+
   const [userName, setUserName] = useState('Usuário');
   const [cursos, setCursos] = useState<Curso[]>([]);
+  const [ambientes, setAmbientes] = useState<Ambiente[]>([]);
   const [continuar, setContinuar] = useState<{ curso: Curso; progresso: number } | null>(null);
   const [metricas, setMetricas] = useState<DashboardData['metricas'] | null>(null);
   const [userStats, setUserStats] = useState<{ horas_estudo: number; total_certificados: number; total_concluidos: number; meta_semanal: any } | null>(null);
@@ -75,8 +93,10 @@ export function AmbientePage() {
       ApiService.getDashboard().catch(() => null),
       ApiService.getUserStats().catch(() => null),
       ApiService.getMetasSemanais().catch(() => []),
-    ]).then(([cursosData, dashData, statsData, metasData]) => {
+      ApiService.getAmbientes().catch(() => []),
+    ]).then(([cursosData, dashData, statsData, metasData, ambData]) => {
       setCursos(cursosData || []);
+      setAmbientes(ambData || []);
       if (dashData) setMetricas(dashData.metricas);
       if (statsData) setUserStats(statsData);
       const metas = (metasData || []) as any[];
@@ -203,9 +223,9 @@ export function AmbientePage() {
             <p style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontWeight: 300, fontSize: 'clamp(10px, 1.25vw, 18px)', color: 'var(--color-text-secondary)', lineHeight: 1.6, marginTop: 8 }}>
               Você está em{' '}
               <span className="tag-env" style={{ background: 'linear-gradient(135deg,#ff9d00,#e8941a)', color: '#000', padding: '3px 10px', borderRadius: 20, fontWeight: 700, fontSize: 15, display: 'inline-block' }}>
-                {config.tagLabel}
+                {displayTag}
               </span>,<br />
-              {config.description}<br /><br />
+              {displayDesc}<br /><br />
                Você atingiu{' '}
               <strong style={{ color: 'var(--color-accent-2)' }}>{metaPercent}%</strong> da sua meta semanal!
             </p>
