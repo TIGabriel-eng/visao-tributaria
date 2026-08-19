@@ -83,5 +83,9 @@ export const AuthService = {
 
   setUser(data: any) {
     if (auth?.setUser) auth.setUser(data);
+    if (data.avatar !== undefined) localStorage.setItem(STORAGE_KEYS.avatar, data.avatar);
+    if (data.name !== undefined) localStorage.setItem(STORAGE_KEYS.name, data.name);
+    if (data.email !== undefined) localStorage.setItem(STORAGE_KEYS.email, data.email);
+    if (data.role !== undefined) localStorage.setItem(STORAGE_KEYS.role, data.role);
   },
 };

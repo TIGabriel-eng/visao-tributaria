@@ -396,6 +396,12 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <footer className="home-footer">
+        <div className="home-footer__divider"></div>
+        <p className="home-footer__copy">© {new Date().getFullYear()} Grupo Orcoma — Todos os direitos reservados</p>
+        <p className="home-footer__dev">Feito com <span className="home-footer__heart">💙</span> pela equipe de Desenvolvedores do Grupo Orcoma</p>
+      </footer>
     </>
   );
 }

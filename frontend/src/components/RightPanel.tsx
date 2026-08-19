@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
 import type { Curso, Evento } from '../types';
 import { PLANO_MAP } from '../types';
+import avatarIcon from '../assets/images/avatar-icon.jpg';
 
 export function RightPanel() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ export function RightPanel() {
     <aside className="right-panel">
       <div className="progress-profile-bar">
         <div className="progress-profile-bar__trigger" onClick={() => setProfileOpen(!profileOpen)}>
-          <img src={avatar || '../assets/images/avatar-icon.jpg'} alt="Avatar" className="progress-sidebar__avatar" id="userAvatar" onError={(e) => { (e.target as HTMLImageElement).src = '../assets/images/avatar-icon.jpg'; }} style={{ width: '57.75px', height: '57.75px', borderRadius: '50%', objectFit: 'cover' }} />
+          <img src={avatar || avatarIcon} alt="Avatar" className="progress-sidebar__avatar" id="userAvatar" onError={(e) => { (e.target as HTMLImageElement).src = avatarIcon; }} style={{ width: '57.75px', height: '57.75px', borderRadius: '50%', objectFit: 'cover' }} />
           <div className="progress-sidebar__user-info">
             <span className="progress-sidebar__username">{userName}</span>
             <span className={`progress-sidebar__plan pill-${role === 'admin' ? 'admin' : role === 'empresario' ? 'empresario' : role === 'visitor' ? 'visitor' : role === 'colaborador_orcoma' ? 'colaborador_orcoma' : 'cliente'}`} id="adminPill">
