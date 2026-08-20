@@ -16,17 +16,17 @@ interface AmbienteConfig {
 }
 
 const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
-  contabil: {
-    name: 'Academy Contábil',
-    tagLabel: 'Academy Contábil',
+  vex: {
+    name: 'Academy Vex',
+    tagLabel: 'Academy Vex',
     description: 'o seu ambiente de aprendizagem contábil.',
     backTo: '/business',
     backLabel: 'Voltar',
     parentKey: 'Academy Business',
   },
   empresarial: {
-    name: 'Academy Gestão Empresarial',
-    tagLabel: 'Academy Gestão Empresarial',
+    name: 'Visão Gestão Empresarial',
+    tagLabel: 'Visão Gestão Empresarial',
     description: 'o seu ambiente de aprendizagem em gestão empresarial.',
     backTo: '/business',
     backLabel: 'Voltar',
@@ -40,10 +40,10 @@ const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
     backLabel: 'Voltar',
     parentKey: 'Academy Team',
   },
-  orcomakers: {
-    name: 'Academy Orcomakers',
-    tagLabel: 'Academy Orcomakers',
-    description: 'o seu ambiente de aprendizagem Visão.',
+  visioners: {
+    name: 'Academy Vex Visioners',
+    tagLabel: 'Academy Vex Visioners',
+    description: 'o ambiente de aprendizagem do seu time!',
     backTo: '/team',
     backLabel: 'Voltar',
     parentKey: 'Academy Team',
@@ -51,10 +51,10 @@ const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
 };
 
 const AMBIENTE_PATH_TO_NAME: Record<string, string> = {
-  contabil: 'Academy Contábil',
-  empresarial: 'Academy Gestão Empresarial',
-  time: 'Academy Team',
-  orcomakers: 'Academy Orcomakers',
+  vex: 'Academy Vex',
+  empresarial: 'Visão Gestão Empresarial',
+  time: 'Academy Time',
+  visioners: 'Academy Vex Visioners',
 };
 
 const normalizeNome = (s: string) => s.trim().toLowerCase();
@@ -67,7 +67,6 @@ export function AmbientePage() {
 
   const [userName, setUserName] = useState('Usuário');
   const [cursos, setCursos] = useState<Curso[]>([]);
-  const [ambientes, setAmbientes] = useState<Ambiente[]>([]);
   const [continuar, setContinuar] = useState<{ curso: Curso; progresso: number } | null>(null);
   const [metricas, setMetricas] = useState<DashboardData['metricas'] | null>(null);
   const [userStats, setUserStats] = useState<{ horas_estudo: number; total_certificados: number; total_concluidos: number; meta_semanal: any } | null>(null);
@@ -75,12 +74,8 @@ export function AmbientePage() {
   const [selectedDays, setSelectedDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
   const [hoursPerDay, setHoursPerDay] = useState<number>(1);
 
-  const backendNome = AMBIENTE_PATH_TO_NAME[ambiente];
-  const ambienteData =
-    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(backendNome || '')) ||
-    ambientes.find((a) => normalizeNome(a.nome) === normalizeNome(config.name));
-  const displayTag = ambienteData?.nome || config.tagLabel;
-  const displayDesc = ambienteData?.descricao?.trim() || config.description;
+  const displayTag = config.tagLabel;
+  const displayDesc = config.description;
 
   useEffect(() => {
     const name = AuthService.getName() || 'Usuário';
@@ -91,10 +86,8 @@ export function AmbientePage() {
       ApiService.getDashboard().catch(() => null),
       ApiService.getUserStats().catch(() => null),
       ApiService.getMetasSemanais().catch(() => []),
-      ApiService.getAmbientes().catch(() => []),
-    ]).then(([cursosData, dashData, statsData, metasData, ambData]) => {
+    ]).then(([cursosData, dashData, statsData, metasData]) => {
       setCursos(cursosData || []);
-      setAmbientes(ambData || []);
       if (dashData) setMetricas(dashData.metricas);
       if (statsData) setUserStats(statsData);
       const metas = (metasData || []) as any[];

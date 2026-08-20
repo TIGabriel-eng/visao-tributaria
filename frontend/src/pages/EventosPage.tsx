@@ -6,6 +6,7 @@ import type { Evento } from '../types';
 
 export function EventosPage() {
   const [eventos, setEventos] = useState<Evento[]>([]);
+  const [eventosPassados, setEventosPassados] = useState<Evento[]>([]);
   const [selected, setSelected] = useState<Evento | null>(null);
   const [marcandoLido, setMarcandoLido] = useState(false);
   const [marcadoLido, setMarcadoLido] = useState(false);
@@ -15,18 +16,26 @@ export function EventosPage() {
       .then((data) => {
         const ev = (data || []) as Evento[];
         const now = new Date();
-        const future = ev
-          .map((e) => {
-            const d = parseEventoData(e.data);
-            return d && d > now ? e : null;
-          })
-          .filter(Boolean) as Evento[];
+        const future: Evento[] = [];
+        const past: Evento[] = [];
+        ev.forEach((e) => {
+          const d = parseEventoData(e.data);
+          if (!d) return;
+          if (d > now) future.push(e);
+          else past.push(e);
+        });
         future.sort((a, b) => {
           const da = parseEventoData(a.data);
           const db = parseEventoData(b.data);
           return (da?.getTime() || 0) - (db?.getTime() || 0);
         });
+        past.sort((a, b) => {
+          const da = parseEventoData(a.data);
+          const db = parseEventoData(b.data);
+          return (db?.getTime() || 0) - (da?.getTime() || 0);
+        });
         setEventos(future);
+        setEventosPassados(past);
       })
       .catch(() => {});
   }, []);
@@ -103,6 +112,67 @@ export function EventosPage() {
             );
           })}
         </div>
+      )}
+
+      {eventosPassados.length > 0 && (
+        <>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, marginTop: '36px', marginBottom: '14px', color: '#191919' }}>
+            Venha acompanhar os eventos que já tivemos!
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '900px' }}>
+            {eventosPassados.map((ev) => {
+              const d = parseEventoData(ev.data);
+              if (!d) return null;
+              const mes = formatMesAbrev(d);
+              const dia = d.getDate();
+              const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+              return (
+                <div
+                  key={ev.id}
+                  onClick={() => setSelected(ev)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    maxWidth: '900px',
+                    minHeight: '83px',
+                    padding: '16px',
+                    background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.4) 100%), #512614',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: 'var(--radius-lg)',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, border-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.5) 100%), #512614'; e.currentTarget.style.borderColor = 'rgba(240, 169, 59, 0.4)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.4) 100%), #512614'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'; }}
+                >
+                  <div className="events-list__date" style={{ background: 'rgba(255, 255, 255, 0.12)' }}>
+                    <span className="events-list__month" style={{ color: '#F0A93B' }}>{mes}</span>
+                    <span className="events-list__day">{dia}</span>
+                  </div>
+                  <div className="events-list__info">
+                    <div className="events-list__title" style={{ fontSize: '1rem', fontWeight: 600 }}>{ev.titulo || 'Evento'}</div>
+                    <div className="events-list__time">{hora}</div>
+                  </div>
+                  <span style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
+                    color: '#C9BDA3',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    padding: '4px 10px',
+                    borderRadius: 'var(--radius-full)',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}>
+                    finalizado
+                  </span>
+                  <i className="ti ti-chevron-right events-list__arrow" style={{ color: '#C9BDA3' }}></i>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {selected && (

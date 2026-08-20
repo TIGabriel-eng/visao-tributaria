@@ -20,8 +20,8 @@ export function Layout() {
   const [searchFetched, setSearchFetched] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const academyRoutes = ['/team', '/business', '/time', '/orcomakers', '/contabil', '/empresarial'];
-  const noRightPanelRoutes = ['/time', '/orcomakers', '/contabil', '/empresarial'];
+  const academyRoutes = ['/team', '/business', '/time', '/visioners', '/vex', '/empresarial'];
+  const noRightPanelRoutes = ['/time', '/visioners', '/vex', '/empresarial'];
   const showRightPanel = academyRoutes.includes(location.pathname) && !noRightPanelRoutes.includes(location.pathname);
   const showSearch = academyRoutes.includes(location.pathname);
   const showProfileInTopbar = noRightPanelRoutes.includes(location.pathname);

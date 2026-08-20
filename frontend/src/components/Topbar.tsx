@@ -131,7 +131,7 @@ export function Topbar({ onMenuToggle, onSearchOpen, showSearch, showProfile }: 
               <img src={avatar || avatarIcon} alt="Avatar" className="topbar-profile__avatar" onError={(e) => { (e.target as HTMLImageElement).src = avatarIcon; }} />
               <div className="topbar-profile__details">
                 <span className="progress-sidebar__username">{userName}</span>
-                <span className={`progress-sidebar__plan pill-${role === 'admin' ? 'admin' : role === 'empresario' ? 'empresario' : role === 'visitor' ? 'visitor' : role === 'colaborador_orcoma' ? 'colaborador_orcoma' : 'cliente'}`}>
+                <span className={`progress-sidebar__plan pill-${role === 'admin' ? 'admin' : role === 'empresário' ? 'empresario' : role === 'visitor' ? 'visitor' : role === 'colaborador_vex' ? 'colaborador_orcoma' : 'cliente'}`}>
                   {PLANO_MAP[role] || 'Visitante'}
                 </span>
               </div>

@@ -28,8 +28,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function getRoleAcademies(role: string): 'business' | 'team' | 'all' {
-  if (role === 'cliente_orcoma' || role === 'empresario') return 'business';
-  if (role === 'cliente_equipe' || role === 'colaborador_orcoma') return 'team';
+  if (role === 'cliente_vex' || role === 'empresário') return 'business';
+  if (role === 'cliente_equipe' || role === 'colaborador_vex') return 'team';
   return 'all';
 }
 
@@ -38,8 +38,8 @@ function RoleGate({ children }: { children: React.ReactNode }) {
   const allowed = getRoleAcademies(role);
   const location = useLocation();
 
-  const businessPaths = ['/business', '/contabil', '/empresarial'];
-  const teamPaths = ['/team', '/time', '/orcomakers'];
+  const businessPaths = ['/business', '/vex', '/empresarial'];
+  const teamPaths = ['/team', '/time', '/visioners'];
 
   const onBusinessPath = businessPaths.some(p => location.pathname.startsWith(p));
   const onTeamPath = teamPaths.some(p => location.pathname.startsWith(p));
@@ -83,8 +83,8 @@ export default function App() {
           <Route path="certificados" element={<CertificadosPage />} />
           <Route path="notificacoes" element={<NotificacoesPage />} />
           <Route path="time" element={<AmbientePage />} />
-          <Route path="orcomakers" element={<AmbientePage />} />
-          <Route path="contabil" element={<AmbientePage />} />
+          <Route path="visioners" element={<AmbientePage />} />
+          <Route path="vex" element={<AmbientePage />} />
           <Route path="empresarial" element={<AmbientePage />} />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />

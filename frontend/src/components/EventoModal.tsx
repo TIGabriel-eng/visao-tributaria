@@ -36,14 +36,16 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
+          background: 'linear-gradient(145deg, #512614 0%, #3a1a0e 40%, #1a0d07 100%)',
+          border: '1px solid rgba(0,0,0,0.4)',
           borderRadius: 'var(--radius-xl)',
           maxWidth: '832px',
           width: '100%',
           maxHeight: '90vh',
           overflow: 'auto',
           position: 'relative',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(81,38,20,0.3), inset 0 1px 0 rgba(255,253,245,0.06)',
+          borderTop: '3px solid #7A5230',
         }}
       >
         <button
@@ -59,7 +61,7 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 'var(--radius-full)',
-            background: 'rgba(0,0,0,0.35)',
+            background: 'rgba(0,0,0,0.5)',
             border: 'none',
             color: '#fff',
             cursor: 'pointer',
@@ -73,13 +75,13 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
           <img
             src={evento.imagem_url}
             alt={evento.titulo}
-            style={{ width: '100%', height: '260px', objectFit: 'cover', borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0' }}
+            style={{ width: '100%', maxHeight: '560px', objectFit: 'contain', borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0' }}
           />
         )}
         <div style={{ padding: '36.4px' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.82rem', fontWeight: 700, marginBottom: '8px' }}>{evento.titulo || 'Evento'}</h2>
-          <p style={{ color: 'var(--color-accent-2)', fontSize: '1.17rem', fontWeight: 600, marginBottom: '4px' }}>{formatFullDate(d)}</p>
-          <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.105rem', marginBottom: '20.8px' }}>em {dias} {dias === 1 ? 'dia' : 'dias'}</p>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.82rem', fontWeight: 700, marginBottom: '8px', color: '#FFFDF5' }}>{evento.titulo || 'Evento'}</h2>
+          <p style={{ color: '#F3EDDE', fontSize: '1.17rem', fontWeight: 600, marginBottom: '4px' }}>{formatFullDate(d)}</p>
+          <p style={{ color: '#D8CDB2', fontSize: '1.105rem', marginBottom: '20.8px' }}>em {dias} {dias === 1 ? 'dia' : 'dias'}</p>
           {evento.url && (
             <p style={{ marginBottom: '20.8px' }}>
               <a
@@ -87,22 +89,22 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  color: 'var(--color-accent-2)',
+                  color: '#F3EDDE',
                   fontWeight: 600,
                   textDecoration: 'underline',
                   textUnderlineOffset: '2px',
                   transition: 'color 0.2s, textDecorationColor 0.2s',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#A37448';
-                  e.currentTarget.style.textDecorationColor = '#A37448';
+                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.textDecorationColor = '#fff';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-accent-2)';
-                  e.currentTarget.style.textDecorationColor = 'var(--color-accent-2)';
+                  e.currentTarget.style.color = '#F3EDDE';
+                  e.currentTarget.style.textDecorationColor = '#F3EDDE';
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.outline = '2px solid var(--color-accent-2)';
+                  e.currentTarget.style.outline = '2px solid #F3EDDE';
                   e.currentTarget.style.outlineOffset = '2px';
                   e.currentTarget.style.borderRadius = '2px';
                 }}
@@ -115,7 +117,7 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
             </p>
           )}
           {evento.descricao && (
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: '1.17rem', lineHeight: 1.6, marginBottom: '31.2px' }}>{evento.descricao}</p>
+            <p style={{ color: '#D8CDB2', fontSize: '1.17rem', lineHeight: 1.6, marginBottom: '31.2px' }}>{evento.descricao}</p>
           )}
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
             <a
@@ -148,9 +150,9 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
                   alignItems: 'center',
                   gap: '10.4px',
                   padding: '13px 26px',
-                  background: marcadoLido ? 'rgba(16, 185, 129, 0.18)' : 'rgba(16, 185, 129, 0.12)',
-                  color: '#10b981',
-                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  background: marcadoLido ? 'rgba(255, 253, 245, 0.2)' : 'rgba(255, 253, 245, 0.1)',
+                  color: '#FFFDF5',
+                  border: '1px solid rgba(255, 253, 245, 0.35)',
                   borderRadius: 'var(--radius-full)',
                   fontWeight: 600,
                   fontSize: '1.105rem',
@@ -164,7 +166,7 @@ export function EventoModal({ evento, onClose, onMarcarLido, marcandoLido = fals
             )}
           </div>
           {avisoReaparece && (
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginTop: '20.8px', marginBottom: 0 }}>
+            <p style={{ color: '#D8CDB2', fontSize: '0.9rem', marginTop: '20.8px', marginBottom: 0 }}>
               <i className="fa-regular fa-clock" style={{ marginRight: '6px' }}></i>
               Este comunicado reaparecerá em 24 horas.
             </p>

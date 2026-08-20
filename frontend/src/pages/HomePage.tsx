@@ -16,20 +16,19 @@ const heroSlides = [
 const ACADEMY_DESC_BY_PATH: Record<string, string> = {
   '/time':
     'Treinamentos práticos que ajudem os colaboradores das empresas cliente a melhorarem sua performance no dia a dia.',
-  '/orcomakers':
-    'Treinamentos internos dos colaboradores da Visão Tributária, com o objetivo de padronizar os processos, desenvolver habilidades e fortalecer a cultura.',
-  '/contabil':
+  '/visioners':
+    'Treinamentos internos dos colaboradores da Visão Tributária.',
+  '/vex':
     'Destinada a conteúdos técnicos, atualizações contábeis, fiscais, tributárias, trabalhistas e orientações importantes relacionadas à rotina empresarial.',
   '/empresarial':
     'Treinamentos voltados para o crescimento e desenvolvimento das empresas, indo além da contabilidade tradicional.',
 };
 
 const AMBIENTE_PATH_BY_NOME: Record<string, string> = {
-  'Academy Contábil': '/contabil',
-  'Academy Gestão Empresarial': '/empresarial',
+  'Academy Vex': '/vex',
+  'Visão Gestão Empresarial': '/empresarial',
   'Academy Team': '/time',
-  'Academy Time': '/time',
-  'Academy Orcomakers': '/orcomakers',
+  'Academy Vex Visioners': '/visioners',
 };
 
 const normalizeNome = (s: string) => s.trim().toLowerCase();
@@ -398,8 +397,7 @@ export function HomePage() {
 
       <footer className="home-footer">
         <div className="home-footer__divider"></div>
-        <p className="home-footer__copy">© {new Date().getFullYear()} Grupo Orcoma — Todos os direitos reservados</p>
-        <p className="home-footer__dev">Feito com <span className="home-footer__heart">💙</span> pela equipe de Desenvolvedores do Grupo Orcoma</p>
+        <p className="home-footer__copy">© {new Date().getFullYear()} Grupo Orcoma — Todos os direitos reservados. Feito com <span className="home-footer__heart">💙</span> pela equipe de Desenvolvedores do Grupo Orcoma</p>
       </footer>
     </>
   );

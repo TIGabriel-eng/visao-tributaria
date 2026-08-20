@@ -95,12 +95,18 @@ export function LoginPage() {
         avatar: userData.avatar_url || '',
       });
       resetRecaptcha('login');
-      if (role === 'cliente_orcoma' || role === 'empresario') {
-        AuthService.setCurrentAcademy('business');
-        navigate('/business');
-      } else if (role === 'cliente_equipe' || role === 'colaborador_orcoma') {
-        AuthService.setCurrentAcademy('team');
-        navigate('/team');
+      if (role === 'cliente_vex') {
+        AuthService.setCurrentAcademy('Academy Business');
+        navigate('/vex');
+      } else if (role === 'empresário') {
+        AuthService.setCurrentAcademy('Academy Business');
+        navigate('/empresarial');
+      } else if (role === 'cliente_equipe') {
+        AuthService.setCurrentAcademy('Academy Team');
+        navigate('/time');
+      } else if (role === 'colaborador_vex') {
+        AuthService.setCurrentAcademy('Academy Team');
+        navigate('/visioners');
       } else {
         navigate('/team');
       }

@@ -131,12 +131,12 @@ export interface Ambiente {
   imagem_url?: string | null;
 }
 export const ACADEMIES: Record<string, AcademyConfig> = {
-  'Academy Team': { name: 'Academy Team', icon: 'fa-users', path: '/team', type: 'team', children: ['Academy Time', 'Academy Orcomakers'] },
-  'Academy Business': { name: 'Academy Business', icon: 'fa-building', path: '/business', type: 'business', children: ['Academy Contabil', 'Academy Empresarial'] },
+  'Academy Team': { name: 'Academy Team', icon: 'fa-users', path: '/team', type: 'team', children: ['Academy Time', 'Academy Vex Visioners'] },
+  'Academy Business': { name: 'Academy Business', icon: 'fa-building', path: '/business', type: 'business', children: ['Academy Vex', 'Academy Empresarial'] },
   'Academy Time': { name: 'Academy Time', icon: 'fa-calculator', path: '/time', type: 'team' },
-  'Academy Orcomakers': { name: 'Academy Orcomakers', icon: 'fa-chart-line', path: '/orcomakers', type: 'team' },
-  'Academy Contabil': { name: 'Academy Contábil', icon: 'fa-calculator', path: '/contabil', type: 'business' },
-  'Academy Empresarial': { name: 'Academy Gestão Empresarial', icon: 'fa-building', path: '/empresarial', type: 'business' },
+  'Academy Vex Visioners': { name: 'Academy Vex Visioners', icon: 'fa-chart-line', path: '/visioners', type: 'team' },
+  'Academy Vex': { name: 'Academy Vex', icon: 'fa-calculator', path: '/vex', type: 'business' },
+  'Academy Empresarial': { name: 'Visão Gestão Empresarial', icon: 'fa-building', path: '/empresarial', type: 'business' },
 };
 
 export const MAIN_ACADEMIES = ['Academy Team', 'Academy Business'];
@@ -164,10 +164,10 @@ export const NAV_ITEMS = [
 
 export const PLANO_MAP: Record<string, string> = {
   'cliente_premium': 'Cliente Premium ⭐',
-  'cliente_orcoma': 'Cliente Visão',
-  'colaborador_orcoma': 'Visão Team',
-  'gestor_orcoma': 'Visão Business',
+  'cliente_vex': 'Cliente Vex',
+  'empresário': 'Empresário',
+  'cliente_equipe': 'Cliente Time',
+  'colaborador_vex': 'Colaborador Visão Tributária',
   'admin': 'Administrador',
-  'empresario': 'Empresário',
   'visitor': 'Visitante',
 };

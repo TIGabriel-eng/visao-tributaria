@@ -9,7 +9,7 @@ import avatarIcon from '../assets/images/avatar-icon.jpg';
 export function RightPanel() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const academySubPages = ['/time', '/orcomakers', '/contabil', '/empresarial'];
+  const academySubPages = ['/time', '/visioners', '/vex', '/empresarial'];
   const showCards = !academySubPages.includes(pathname);
   const [userName, setUserName] = useState(AuthService.getName());
   const [avatar, setAvatar] = useState(AuthService.getAvatar());
@@ -91,7 +91,7 @@ export function RightPanel() {
           <img src={avatar || avatarIcon} alt="Avatar" className="progress-sidebar__avatar" id="userAvatar" onError={(e) => { (e.target as HTMLImageElement).src = avatarIcon; }} style={{ width: '57.75px', height: '57.75px', borderRadius: '50%', objectFit: 'cover' }} />
           <div className="progress-sidebar__user-info">
             <span className="progress-sidebar__username">{userName}</span>
-            <span className={`progress-sidebar__plan pill-${role === 'admin' ? 'admin' : role === 'empresario' ? 'empresario' : role === 'visitor' ? 'visitor' : role === 'colaborador_orcoma' ? 'colaborador_orcoma' : 'cliente'}`} id="adminPill">
+            <span className={`progress-sidebar__plan pill-${role === 'admin' ? 'admin' : role === 'empresário' ? 'empresario' : role === 'visitor' ? 'visitor' : role === 'colaborador_vex' ? 'colaborador_orcoma' : 'cliente'}`} id="adminPill">
               {PLANO_MAP[role] || 'Visitante'}
             </span>
             {role === 'admin' && (

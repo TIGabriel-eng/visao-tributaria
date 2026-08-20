@@ -19,8 +19,8 @@ function getMainAcademy(academyKey: string): AcademyConfig {
 }
 
 function getRoleAcademies(role: string): string[] {
-  if (role === 'cliente_orcoma' || role === 'empresario') return ['Academy Business'];
-  if (role === 'cliente_equipe' || role === 'colaborador_orcoma') return ['Academy Team'];
+  if (role === 'cliente_vex' || role === 'empresário') return ['Academy Business'];
+  if (role === 'cliente_equipe' || role === 'colaborador_vex') return ['Academy Team'];
   return MAIN_ACADEMIES;
 }
 
@@ -34,16 +34,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   useEffect(() => {
     const path = location.pathname;
     let academyKey = 'Academy Business';
-    if (path.includes('/contabil')) {
-      academyKey = 'Academy Contabil';
+    if (path.includes('/contabil') || path.includes('/vex')) {
+      academyKey = 'Academy Vex';
     } else if (path.includes('/empresarial')) {
-      academyKey = 'Academy Empresarial';
+      academyKey = 'Visão Gestão Empresarial';
     } else if (path.includes('/business')) {
       academyKey = 'Academy Business';
     } else if (path.includes('/time')) {
       academyKey = 'Academy Time';
-    } else if (path.includes('/orcomakers')) {
-      academyKey = 'Academy Orcomakers';
+    } else if (path.includes('/orcomakers') || path.includes('/visioners')) {
+      academyKey = 'Academy Vex Visioners';
     } else if (path.includes('/team')) {
       academyKey = 'Academy Team';
     }
