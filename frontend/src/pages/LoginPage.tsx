@@ -192,10 +192,10 @@ export function LoginPage() {
             <h2>Entrar</h2>
             <form onSubmit={handleLogin}>
               <div className="input-group">
-                <label>Usuário</label>
+                <label>E-mail</label>
                 <input
                   type="text"
-                  placeholder="Digite seu usuário"
+                  placeholder="Digite seu e-mail"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
