@@ -583,13 +583,12 @@ ul { list-style: none; }
   overflow: hidden;
 }
 
-.hero-welcome-img {
+.hero-welcome-icon {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  max-height: 100%;
-  max-width: 280px;
-  object-fit: contain;
+  right: 40px;
+  bottom: 30px;
+  font-size: 10rem;
+  color: rgba(255, 157, 0, 0.15);
   pointer-events: none;
 }
 
@@ -2653,6 +2652,15 @@ ul { list-style: none; }
   width: 350px;
   max-width: 100%;
   height: auto;
+  animation: logo-pulse 3s ease-in-out infinite;
+  transform-origin: center center;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.02) saturate(1.05);
+}
+
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
 }
 
 .login-left__text {
@@ -3335,7 +3343,7 @@ ul { list-style: none; }
   .ambiente-card__image { height: 216px; }
 
   .hero-row .hero { flex: 0 1 910px; max-width: 910px; max-height: 403px; }
-  .hero-welcome-img { max-width: 364px; }
+  .hero-welcome-icon { font-size: 8rem; }
   .hero-stats { flex: 0 0 364px; min-width: 286px; }
   .hero-stat-card { gap: 10.4px; padding: 5.2px 20.8px; }
   .hero-stat-card__icon { width: 41.6px; height: 41.6px; min-width: 41.6px; border-radius: 10.4px; }
@@ -3370,7 +3378,7 @@ ul { list-style: none; }
   .curso-card__image { height: 175px; }
 
   .hero-row .hero { flex: 0 1 770px; max-width: 770px; max-height: 341px; }
-  .hero-welcome-img { max-width: 308px; }
+  .hero-welcome-icon { font-size: 6rem; }
   .hero-stats { flex: 0 0 308px; min-width: 242px; }
   .hero-stat-card { gap: 8.8px; padding: 4.4px 17.6px; }
   .hero-stat-card__icon { width: 35.2px; height: 35.2px; min-width: 35.2px; border-radius: 8.8px; }

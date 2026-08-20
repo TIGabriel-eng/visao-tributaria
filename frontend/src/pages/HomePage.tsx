@@ -5,7 +5,6 @@ import { ApiService } from '../services/api';
 import { ProgressService } from '../services/progress';
 import { getChildAcademies } from '../types';
 import type { Curso, Evento, Trilha, DashboardData, Ambiente } from '../types';
-import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
 import banner1 from '../assets/images/banner1.png';
 import banner2 from '../assets/images/banner2.png';
 
@@ -293,7 +292,7 @@ export function HomePage() {
         </div>
       ) : (
         <div style={{ textAlign: 'center', padding: '24px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <img src={cursoNaoConcluidoImg} alt="Nenhum curso em andamento" style={{ maxWidth: '160px', marginBottom: '10px' }} />
+          <i className="fa-solid fa-book-open" style={{ fontSize: '4rem', color: 'var(--color-text-muted)', marginBottom: '10px' }} />
           <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>Você não tem nenhum curso em andamento!</p>
         </div>
       )}

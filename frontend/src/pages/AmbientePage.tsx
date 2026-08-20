@@ -4,8 +4,7 @@ import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
 import { ProgressService } from '../services/progress';
 import type { Curso, DashboardData, Ambiente } from '../types';
-import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
-import leaoImg from '../assets/images/leão.png';
+
 
 interface AmbienteConfig {
   name: string;
@@ -213,7 +212,7 @@ export function AmbientePage() {
 
       <div className="hero-row">
         <section className="hero" style={{ position: 'relative' }}>
-          <img src={leaoImg} alt="Leão" className="hero-welcome-img" />
+          <i className="fa-solid fa-book-open hero-welcome-icon" />
           <div className="hero__welcome">
             <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: 'clamp(20px, 3.2vw, 42px)', fontWeight: 800, color: 'var(--color-text-primary)' }}>
               Bem-Vindo de Volta<br />
@@ -293,7 +292,7 @@ export function AmbientePage() {
         </div>
       ) : (
         <div style={{ textAlign: 'center', padding: '24px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <img src={cursoNaoConcluidoImg} alt="Nenhum curso em andamento" style={{ maxWidth: '160px', marginBottom: '10px' }} />
+          <i className="fa-solid fa-book-open" style={{ fontSize: '4rem', color: 'var(--color-text-muted)', marginBottom: '10px' }} />
           <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>Você não tem nenhum curso em andamento!</p>
         </div>
       )}

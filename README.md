@@ -9,7 +9,7 @@ Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack c
 1. [Stack Tecnológica](#stack-tecnológica)
 2. [Estrutura do Projeto](#estrutura-do-projeto)
 3. [Backend — Django (pasta `backend/`)](#backend--django-pasta-backend)
-   - [Configuração do projeto (`orcoma_academy/`)](#configuração-do-projeto-orcoma_academy)
+   - [Configuração do projeto (`visao_academy/`)](#configuração-do-projeto-visao_academy)
    - [App `core/` — Modelos de dados](#app-core--modelos-de-dados)
    - [App `core/` — Views, rotas e serializers](#app-core--views-rotas-e-serializers)
    - [App `core/` — Autenticação, agendador e validações](#app-core--autenticação-agendador-e-validações)
@@ -51,7 +51,7 @@ Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack c
 | | django-apscheduler (agendador) | ≥ 0.7 |
 | | google-genai (Gemini) | 2.10 |
 | | reportlab (PDF de certificado) | ≥ 4.0 |
-| | cloudinary / django-cloudinary-storage (mídias) | — |
+| | django-storages[boto3] — Supabase Storage S3 (mídias) | ≥ 1.14 |
 | **Banco** | PostgreSQL (produção/Render) / SQLite (local) | — |
 | **Servidores** | Gunicorn + Whitenoise (backend) / Vercel (frontend) | — |
 
@@ -64,7 +64,7 @@ Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack c
 ```
 ├── backend/                     # API Django
 │   ├── core/                    # App principal (modelos, views, admin, serviços)
-│   ├── orcoma_academy/          # Configuração do projeto Django
+│   ├── visao_academy/          # Configuração do projeto Django
 │   ├── scripts/                 # Backup/restauração de banco e setup
 │   ├── data/                    # Dados auxiliares (ex.: equipe_admin.json)
 │   ├── media/                   # Mídias locais (desenvolvimento)
@@ -92,14 +92,14 @@ Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack c
 
 ## Backend — Django (pasta `backend/`)
 
-### Configuração do projeto (`orcoma_academy/`)
+### Configuração do projeto (`visao_academy/`)
 
 | Arquivo | Função |
 |---|---|
-| `manage.py` | Ponto de entrada padrão do Django (`DJANGO_SETTINGS_MODULE=orcoma_academy.settings`). |
-| `orcoma_academy/settings.py` | Configuração central: lê o `.env` (python-dotenv); **PostgreSQL via `DATABASE_URL`** (com `ssl_require=True`) ou SQLite local; cache `LocMemCache`; mídias no **Cloudinary** (fallback para disco); estáticos via **Whitenoise**; CORS liberado em DEBUG e restrito a domínios conhecidos em produção; `REST_FRAMEWORK` com `CookieJWTAuthentication` + SimpleJWT (access 1 dia, refresh 7 dias); chave da API do Google (Gemini). Inclui signal `post_migrate` que garante a existência do superusuário `admin` **apenas em DEBUG** (não executa em produção). |
-| `orcoma_academy/urls.py` | Rotas raiz: redireciona `/` para `/admin/login/`; expõe `/admin/`, `/admin/backup-database/`, `/admin/restore-database/`, `/api/` (inclui `core.urls`), `/api/token/` (login JWT com cookies) e `/api/token/refresh/`. |
-| `orcoma_academy/asgi.py` / `wsgi.py` | Entrypoints padrão ASGI/WSGI do Django. |
+| `manage.py` | Ponto de entrada padrão do Django (`DJANGO_SETTINGS_MODULE=visao_academy.settings`). |
+| `visao_academy/settings.py` | Configuração central: lê o `.env` (python-dotenv); **PostgreSQL via `DATABASE_URL`** (com `ssl_require=True`) ou SQLite local; cache `LocMemCache`; mídias no **Supabase Storage** via S3 (`core.storages.SupabaseS3Storage`, fallback para disco local sem credenciais); estáticos via **Whitenoise**; CORS liberado em DEBUG e restrito a domínios conhecidos em produção; `REST_FRAMEWORK` com `CookieJWTAuthentication` + SimpleJWT (access 1 dia, refresh 7 dias); chave da API do Google (Gemini). Inclui signal `post_migrate` que garante a existência do superusuário `admin` **apenas em DEBUG** (não executa em produção). |
+| `visao_academy/urls.py` | Rotas raiz: redireciona `/` para `/admin/login/`; expõe `/admin/`, `/admin/backup-database/`, `/admin/restore-database/`, `/api/` (inclui `core.urls`), `/api/token/` (login JWT com cookies) e `/api/token/refresh/`. |
+| `visao_academy/asgi.py` / `wsgi.py` | Entrypoints padrão ASGI/WSGI do Django. |
 
 ### App `core/` — Modelos de dados
 
@@ -227,14 +227,14 @@ Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack c
 | `create_superuser.py` | Cria superusuário (usuário `admin` por padrão; senha via variável `ADMIN_PASSWORD` ou prompt). |
 | `reset_admin.py` | Redefine a senha do `admin` (via `ADMIN_PASSWORD` ou prompt) e garante staff/superuser. |
 | `list_users.py` | Lista id/username/email/staff/super de todos os usuários. |
-| `keep_alive.py` | Pinga `https://orcoma-academy-backend.onrender.com/api/ping/` com retries; usado pelo cron do Render (5 min). |
+| `keep_alive.py` | Pinga `https://dashboard-visao.onrender.com/api/ping/` com retries; usado pelo cron do Render (5 min). |
 | `gerar_template_excel.py` | Gera `template_usuarios_massa.xlsx` com exemplos e abas de roles/unidades/regimes. |
 | `consultar_modulos.py` | Script temporário que conta cursos/módulos e imprime módulos de um curso. |
 | `testar_exclusao_usuario.py` | Testa (sem executar) a exclusão de usuários, contando registros relacionados de todas as tabelas. |
 
 ### Deploy — Render (`render.yaml`)
 
-- **Serviço web `orcoma-academy-api`:** gunicorn (2 workers × 2 threads, timeout 120s), build com `collectstatic` + `migrate`, Python 3.12.0; secrets `SECRET_KEY`, `DATABASE_URL`, Cloudinary.
+- **Serviço web `dashboard-visao-api`:** gunicorn (2 workers × 2 threads, timeout 120s), build com `collectstatic` + `migrate`, Python 3.12.0; secrets `SECRET_KEY`, `DATABASE_URL`, `SUPABASE_S3_*` (Storage).
 - **Cron `orcoma-keep-alive`:** roda `keep_alive.py` a cada 5 min para manter o serviço acordado.
 
 ---
@@ -252,7 +252,7 @@ Plataforma de educação corporativa da Orcoma: uma aplicação web full-stack c
 | `index.html` | `lang="pt-BR"`, título "Orcoma Academy", Google Fonts (Sora, DM Sans, Inter), Font Awesome 6.5.0 e Tabler Icons via CDN. |
 | `vercel.json` | Rewrite genérico `/(.*)` → `/index.html` (fallback SPA para deploy na Vercel). |
 | `public/` | `favicon.svg`, `icons.svg`, `orcoma-logo.png`. |
-| `.env` | `VITE_API_URL=https://dashboard.orcomacontabilidade.com.br` (base da API). |
+| `.env` | `VITE_API_URL=https://dashboard-visao.onrender.com` (base da API). |
 
 **`src/main.tsx`** — ponto de entrada; renderiza `<App />` em `<StrictMode>`.
 

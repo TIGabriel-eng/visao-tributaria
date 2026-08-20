@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ApiService } from '../services/api';
 import { ProgressService } from '../services/progress';
 import type { Curso } from '../types';
-import cursoNaoConcluidoImg from '../assets/images/curso-não-concluído.png';
 
 interface ProgressoMap {
   [cursoId: string]: { progresso: number; concluido: boolean };
@@ -41,7 +40,7 @@ export function ContinuarAssistindoPage() {
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#191919' }}>Continuar Assistindo</h1>
       {emAndamento.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '40px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <img src={cursoNaoConcluidoImg} alt="Nenhum curso em andamento" style={{ maxWidth: '160px', marginBottom: '10px' }} />
+          <i className="fa-solid fa-book-open" style={{ fontSize: '4rem', color: 'var(--color-text-muted)', marginBottom: '10px' }} />
           <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>Você não tem nenhum curso em andamento!</p>
         </div>
       ) : (

@@ -45,8 +45,8 @@ export function EventosPage() {
       <h1 style={{ fontFamily: "var(--font-display)", fontSize: '1.3125rem', fontWeight: 800, marginBottom: '16px', color: '#191919' }}>Eventos</h1>
       {eventos.length === 0 ? (
         <div className="events-empty" style={{ textAlign: 'center', padding: '40px 0' }}>
-          <i className="ti ti-calendar-off" style={{ fontSize: '2rem', marginBottom: '8px', display: 'block' }}></i>
-          <p>Nenhum evento agendado</p>
+          <i className="ti ti-calendar-off" style={{ fontSize: '2.8rem', marginBottom: '8px', display: 'block', color: '#333333' }}></i>
+           <p style={{ fontSize: '18px', color: '#333333' }}>Nenhum evento agendado</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '900px' }}>
