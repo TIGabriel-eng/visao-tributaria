@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { ApiService } from '../services/api';
 import { ProgressService } from '../services/progress';
-import type { Curso, DashboardData, Ambiente } from '../types';
+import type { Curso, DashboardData } from '../types';
 
 
 interface AmbienteConfig {
@@ -49,15 +49,6 @@ const AMBIENTE_CONFIGS: Record<string, AmbienteConfig> = {
     parentKey: 'Academy Team',
   },
 };
-
-const AMBIENTE_PATH_TO_NAME: Record<string, string> = {
-  vex: 'Academy Vex',
-  empresarial: 'Visão Gestão Empresarial',
-  time: 'Academy Time',
-  visioners: 'Academy Vex Visioners',
-};
-
-const normalizeNome = (s: string) => s.trim().toLowerCase();
 
 export function AmbientePage() {
   const { pathname } = useLocation();
