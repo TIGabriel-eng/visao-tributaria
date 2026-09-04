@@ -73,7 +73,7 @@ export function AmbientePage() {
     setUserName(name);
 
     Promise.all([
-      ApiService.getCursos().catch(() => []),
+      ApiService.getCursos(config.name).catch(() => []),
       ApiService.getDashboard().catch(() => null),
       ApiService.getUserStats().catch(() => null),
       ApiService.getMetasSemanais().catch(() => []),

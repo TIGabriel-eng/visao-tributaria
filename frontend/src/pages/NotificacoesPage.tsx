@@ -60,9 +60,9 @@ export function NotificacoesPage() {
           <button
             onClick={handleMarcarTodasLidas}
             style={{
-              background: 'rgba(122, 82, 48, 0.1)',
-              border: '1px solid rgba(122, 82, 48, 0.2)',
-              color: 'var(--color-accent)',
+              background: '#FFFFF0',
+              border: '1px solid #D8CDB2',
+              color: '#7A5230',
               padding: '8px 16px',
               borderRadius: 'var(--radius-full)',
               cursor: 'pointer',
@@ -96,13 +96,13 @@ export function NotificacoesPage() {
                 gap: '14px',
                 padding: '18px 20px',
                 cursor: 'pointer',
-                background: n.lida ? 'var(--color-surface)' : 'rgba(122, 82, 48, 0.06)',
-                border: '1px solid var(--color-border)',
+                background: '#FFFFF0',
+                border: '1px solid #D8CDB2',
                 borderRadius: 'var(--radius-lg)',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(122, 82, 48, 0.1)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = n.lida ? 'var(--color-surface)' : 'rgba(122, 82, 48, 0.06)'; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#F8F3E1'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#FFFFF0'; }}
             >
               <div
                 style={{
@@ -142,7 +142,7 @@ export function NotificacoesPage() {
                   {n.mensagem}
                 </p>
                 {n.link && (
-                  <span style={{ fontSize: '0.8rem', color: 'var(--color-accent)', marginTop: '6px', display: 'inline-block', fontWeight: 500 }}>
+                  <span style={{ fontSize: '0.8rem', color: '#7A5230', marginTop: '6px', display: 'inline-block', fontWeight: 500 }}>
                     Ver mais <i className="fa-solid fa-arrow-right" style={{ fontSize: '0.7rem', marginLeft: '4px' }}></i>
                   </span>
                 )}

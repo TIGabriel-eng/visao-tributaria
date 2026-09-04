@@ -181,12 +181,14 @@ export const ApiService = {
   },
 
   // Cursos
-  async getCursos() {
-    return this.get('/api/cursos/');
+  async getCursos(ambiente?: string) {
+    const params = ambiente ? `?ambiente=${encodeURIComponent(ambiente)}` : '';
+    return this.get('/api/cursos/' + params);
   },
 
-  async getCursosRecomendados() {
-    return this.get('/api/cursos-recomendados/');
+  async getCursosRecomendados(ambiente?: string) {
+    const params = ambiente ? `?ambiente=${encodeURIComponent(ambiente)}` : '';
+    return this.get('/api/cursos-recomendados/' + params);
   },
 
   // Matriculas
@@ -349,5 +351,22 @@ export const ApiService = {
 
   async criarLembreteEventos() {
     return this.post('/api/notificacoes/criar-lembrete-eventos/');
+  },
+
+  // Quiz
+  async getQuizVideo(videoId: number | string) {
+    return this.get('/api/quizzes/video/' + videoId + '/');
+  },
+
+  async getQuizCurso(cursoId: number | string) {
+    return this.get('/api/quizzes/curso/' + cursoId + '/');
+  },
+
+  async submitQuiz(quizId: number | string, respostas: { pergunta_id: number; alternativa_id: number }[]) {
+    return this.post('/api/quizzes/' + quizId + '/responder/', { respostas });
+  },
+
+  async getResultadosQuiz(quizId: number | string) {
+    return this.get('/api/quizzes/' + quizId + '/resultados/');
   },
 };

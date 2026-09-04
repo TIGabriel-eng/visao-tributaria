@@ -130,6 +130,43 @@ export interface Ambiente {
   ativo?: boolean;
   imagem_url?: string | null;
 }
+
+export interface Alternativa {
+  id: number;
+  texto: string;
+}
+
+export interface Pergunta {
+  id: number;
+  enunciado: string;
+  alternativas: Alternativa[];
+}
+
+export interface AlunoQuiz {
+  id: number;
+  titulo: string;
+  descricao: string;
+  video_id: number | null;
+  curso_id: number | null;
+  perguntas: Pergunta[];
+}
+
+export interface QuizResultadoQuestao {
+  pergunta_id: number;
+  alternativa_id: number;
+  correta_id: number | null;
+  acertou: boolean;
+}
+
+export interface QuizResultado {
+  id: number;
+  aprovado: boolean;
+  nota: number;
+  acertos: number;
+  total: number;
+  questoes: QuizResultadoQuestao[];
+  tentado_em?: string;
+}
 export const ACADEMIES: Record<string, AcademyConfig> = {
   'Academy Team': { name: 'Academy Team', icon: 'fa-users', path: '/team', type: 'team', children: ['Academy Time', 'Academy Vex Visioners'] },
   'Academy Business': { name: 'Academy Business', icon: 'fa-building', path: '/business', type: 'business', children: ['Academy Vex', 'Academy Empresarial'] },

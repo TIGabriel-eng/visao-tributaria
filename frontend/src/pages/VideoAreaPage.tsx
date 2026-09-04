@@ -10,7 +10,8 @@ import { RatingSystem } from '../components/video-area/RatingSystem';
 import { LessonSidebar } from '../components/video-area/LessonSidebar';
 import { MobileTabs } from '../components/video-area/MobileTabs';
 import { ProgressTracker } from '../components/video-area/ProgressTracker';
-import type { Curso, Modulo, Material, Review } from '../types';
+import { QuizSection } from '../components/video-area/QuizSection';
+import type { Curso, Modulo, Material, Review, AlunoQuiz } from '../types';
 
 interface ActiveLesson {
   moduloIdx: number;
@@ -44,6 +45,12 @@ export function VideoAreaPage() {
   const [mobileTab, setMobileTab] = useState('video');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('materiais');
+
+  const [quizzes, setQuizzes] = useState<AlunoQuiz[]>([]);
+  const [quizLoading, setQuizLoading] = useState(false);
+  const [videoConcluido, setVideoConcluido] = useState(false);
+  const [quizAtual, setQuizAtual] = useState(0);
+  const [replayKey, setReplayKey] = useState(0);
 
   const cursoJaConcluidoRef = useRef(false);
   const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -255,6 +262,27 @@ export function VideoAreaPage() {
     }
   }, [activeLesson, curso]);
 
+  useEffect(() => {
+    if (!activeLesson || !curso) return;
+    const videoId = (activeLesson.material as any)?.id;
+    if (!videoId) {
+      setQuizzes([]);
+      setVideoConcluido(false);
+      setQuizAtual(0);
+      return;
+    }
+    setQuizLoading(true);
+    setVideoConcluido(false);
+    setQuizAtual(0);
+    ApiService.getQuizVideo(videoId)
+      .then((data: any) => {
+        const lista = Array.isArray(data) ? data : (data ? [data] : []);
+        setQuizzes(lista);
+      })
+      .catch(() => setQuizzes([]))
+      .finally(() => setQuizLoading(false));
+  }, [activeLesson, curso]);
+
   const handleSelectAula = useCallback((moduloIdx: number, aulaIdx: number, material: Material) => {
     if (!modulos[moduloIdx]) return;
     setActiveLesson({
@@ -270,8 +298,29 @@ export function VideoAreaPage() {
 
   const handleVideoEnded = useCallback(() => {
     if (!activeLesson) return;
-    marcarAulaComoConcluida(activeLesson.moduloIdx, activeLesson.aulaIdx);
-  }, [activeLesson, marcarAulaComoConcluida]);
+    if (quizzes.length > 0) {
+      setVideoConcluido(true);
+      setQuizAtual(0);
+    } else {
+      marcarAulaComoConcluida(activeLesson.moduloIdx, activeLesson.aulaIdx);
+    }
+  }, [activeLesson, quizzes.length, marcarAulaComoConcluida]);
+
+  const handleQuizPassed = useCallback(() => {
+    if (quizAtual + 1 >= quizzes.length) {
+      if (activeLesson) {
+        marcarAulaComoConcluida(activeLesson.moduloIdx, activeLesson.aulaIdx);
+      }
+    } else {
+      setQuizAtual(quizAtual + 1);
+    }
+  }, [quizAtual, quizzes.length, activeLesson, marcarAulaComoConcluida]);
+
+  const handleQuizFailed = useCallback(() => {
+    setVideoConcluido(false);
+    setQuizAtual(0);
+    setReplayKey((k) => k + 1);
+  }, []);
 
   const handlePostReview = useCallback(async (nota: number, comentario: string) => {
     if (!activeLesson?.modulo?.id) return;
@@ -371,6 +420,7 @@ export function VideoAreaPage() {
           <div className={'va-content' + (mobileTab !== 'video' ? ' hidden-mobile' : '')}>
             {currentVideoUrl ? (
               <VideoPlayer
+                key={replayKey}
                 videoUrl={currentVideoUrl}
                 title={activeLesson?.material?.titulo || curso.titulo}
                 cursoId={curso.id}
@@ -390,6 +440,18 @@ export function VideoAreaPage() {
                 moduloTitulo={currentModulo?.titulo}
                 aulaIndex={currentAulaIdx}
                 moduloId={currentModulo?.id}
+              />
+            )}
+
+            {!quizLoading && videoConcluido && quizzes.length > 0 && (
+              <QuizSection
+                key={quizAtual}
+                videoId={(activeLesson?.material as any)?.id}
+                cursoId={curso.id}
+                mode="video"
+                quiz={quizzes[quizAtual] ?? null}
+                onPassed={handleQuizPassed}
+                onFailed={handleQuizFailed}
               />
             )}
 
