@@ -130,8 +130,17 @@ export function RightPanel() {
             <div className="progress__summary">
               <div className="progress__circle-wrap">
                 <svg className="progress__ring" viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="ringSheen" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0" stopColor="#000" stopOpacity="0.38" />
+                      <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
+                      <stop offset="1" stopColor="#fff" stopOpacity="0.5" />
+                    </linearGradient>
+                  </defs>
                   <circle className="progress__ring-bg" cx="60" cy="60" r="50"></circle>
+                  <circle className="progress__ring-bg-sheen" cx="60" cy="60" r="50"></circle>
                   <circle className="progress__ring-fill" cx="60" cy="60" r="50" style={{ stroke: tier.color, strokeDasharray: circumference, strokeDashoffset: offset }} id="progressRing"></circle>
+                  <circle className="progress__ring-sheen" cx="60" cy="60" r="50" style={{ strokeDasharray: circumference, strokeDashoffset: offset }}></circle>
                 </svg>
                 <div className="progress__circle-text">
                   <span className="progress__percent" id="progressPercent">{progress}%</span>

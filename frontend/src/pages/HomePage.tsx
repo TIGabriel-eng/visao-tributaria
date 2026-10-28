@@ -224,9 +224,6 @@ export function HomePage() {
   return (
     <>
       <HeroCarousel />
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 0', animation: 'fadeUp 1.5s ease both' }}>
-        <a href="/meus-cursos" className="btn-hero">Explorar conteúdos <i className="fa-solid fa-arrow-right"></i></a>
-      </div>
 
       <h1 style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '24px', fontWeight: 700, color: '#191919', margin: '8px 0 0', padding: '16px 24px 8px', animation: 'fadeUp 1.5s ease both' }}>Seu Ambiente de Aprendizagem</h1>
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '16px', justifyContent: 'center' }}>
@@ -397,7 +394,7 @@ export function HomePage() {
 
       <footer className="home-footer">
         <div className="home-footer__divider"></div>
-        <p className="home-footer__copy">© {new Date().getFullYear()} Grupo Orcoma — Todos os direitos reservados. Feito com <span className="home-footer__heart">💙</span> pela equipe de Desenvolvedores do Grupo Orcoma</p>
+        <p className="home-footer__copy">© {new Date().getFullYear()} Grupo Orcoma — Todos os direitos reservados. Feito com <span className="home-footer__heart">💙</span> pela equipe de Desenvolvedores do <span className="home-footer__brand">Grupo Orcoma - G</span></p>
       </footer>
     </>
   );

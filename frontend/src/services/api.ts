@@ -153,6 +153,24 @@ export const ApiService = {
     return request('POST', path, body);
   },
 
+  async postForm(path: string, form: FormData): Promise<any> {
+    const doFetch = () => fetch(BASE_URL + path, { method: 'POST', body: form, credentials: 'include' });
+    let res = await doFetch();
+    if (res.status === 401) {
+      await refreshAccessToken();
+      res = await doFetch();
+    }
+    let data;
+    try { data = await res.json(); } catch { data = null; }
+    if (!res.ok) {
+      const err = new Error(data?.detail || 'Erro na requisição');
+      (err as any).status = res.status;
+      (err as any).data = data;
+      throw err;
+    }
+    return data;
+  },
+
   patch(path: string, body?: any) {
     return request('PATCH', path, body);
   },

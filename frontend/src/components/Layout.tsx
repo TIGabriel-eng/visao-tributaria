@@ -6,7 +6,17 @@ import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { RightPanel } from './RightPanel';
 import { EventoComunicado } from './EventoComunicado';
+import { SearchIcon } from './SearchIcons';
+import type { SearchIconName } from './SearchIcons';
 import type { Curso, Trilha, Evento } from '../types';
+
+interface SearchCardItem {
+  type: string;
+  icon: SearchIconName;
+  title: string;
+  meta: string;
+  slug?: string;
+}
 
 export function Layout() {
   const navigate = useNavigate();
@@ -95,10 +105,10 @@ export function Layout() {
     if (slug) navigate('/video-area/' + slug);
   };
 
-  const renderSearchCard = (item: { type: string; icon: string; iconBg: string; iconColor: string; title: string; meta: string; slug?: string }) => (
+  const renderSearchCard = (item: SearchCardItem) => (
     <div key={item.type + '-' + item.title} className="search-modal__card" onClick={() => handleResultClick(item.type, item.slug)}>
-      <div className="search-modal__card-icon" style={{ background: item.iconBg, color: item.iconColor, width: 40, height: 40, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <i className={item.icon}></i>
+      <div className={`search-modal__card-icon search-modal__card-icon--${item.type}`}>
+        <SearchIcon name={item.icon} size={18} />
       </div>
       <div style={{ minWidth: 0 }}>
         <div className="search-modal__card-title">{item.title}</div>
@@ -109,32 +119,28 @@ export function Layout() {
 
   const renderResults = () => {
     if (searchLoading) {
-      return <div className="search-modal__loading"><i className="fa-solid fa-spinner fa-spin"></i> Carregando...</div>;
+      return <div className="search-modal__loading"><SearchIcon name="spinner" size={20} /> Carregando...</div>;
     }
 
     if (searchFilter === 'eventos') {
       const items = filtered.eventos;
       if (items.length === 0) {
-        return <div className="search-modal__empty"><i className="fa-regular fa-calendar-xmark"></i><p>Nenhum evento encontrado</p></div>;
+        return <div className="search-modal__empty"><SearchIcon name="calendar-x" size={28} /><p>Nenhum evento encontrado</p></div>;
       }
       return items.map(e => renderSearchCard({
         type: 'evento',
-        icon: 'fa-regular fa-calendar',
-        iconBg: 'rgba(122,82,48,0.12)',
-        iconColor: '#7A5230',
+        icon: 'calendar',
         title: e.titulo || 'Evento',
         meta: 'Evento • ' + (e.data || ''),
       }));
     }
 
-    const items: { type: string; icon: string; iconBg: string; iconColor: string; title: string; meta: string; slug?: string }[] = [];
+    const items: SearchCardItem[] = [];
 
     if (!hasQuery) {
       filtered.recomendados.slice(0, 5).forEach(c => items.push({
         type: 'recomendado',
-        icon: 'fa-solid fa-star',
-        iconBg: 'rgba(255,157,0,0.12)',
-        iconColor: '#ff9d00',
+        icon: 'star',
         title: c.titulo,
         meta: 'Recomendado para você',
         slug: c.slug || String(c.id),
@@ -143,9 +149,7 @@ export function Layout() {
 
     filtered.cursos.forEach(c => items.push({
       type: 'curso',
-      icon: 'fa-solid fa-book',
-      iconBg: 'rgba(122,82,48,0.12)',
-      iconColor: '#7A5230',
+      icon: 'book',
       title: c.titulo,
       meta: 'Curso',
       slug: c.slug || String(c.id),
@@ -153,15 +157,13 @@ export function Layout() {
 
     filtered.trilhas.forEach(t => items.push({
       type: 'trilha',
-      icon: 'fa-solid fa-route',
-      iconBg: 'rgba(16,185,129,0.12)',
-      iconColor: '#10b981',
+      icon: 'route',
       title: t.nome,
       meta: 'Trilha • ' + (t.cursos?.length || 0) + ' cursos',
     }));
 
     if (items.length === 0) {
-      return <div className="search-modal__empty"><i className="fa-regular fa-magnifying-glass"></i><p>Nenhum resultado para "{searchQuery}"</p></div>;
+      return <div className="search-modal__empty"><SearchIcon name="search" size={28} /><p>Nenhum resultado para "{searchQuery}"</p></div>;
     }
 
     return items.map(renderSearchCard);
@@ -182,23 +184,23 @@ export function Layout() {
         <div className="search-modal-overlay is-visible" onClick={() => setSearchOpen(false)} id="searchModalOverlay">
           <div className="search-modal" onClick={(e) => e.stopPropagation()}>
             <div className="search-modal__header">
-              <i className="fa-solid fa-magnifying-glass search-modal__icon"></i>
+              <span className="search-modal__icon"><SearchIcon name="search" size={20} /></span>
               <span className="search-modal__title">Buscar</span>
             </div>
             <div className="search-modal__subtitle">Encontre cursos, trilhas, eventos e recomendados</div>
             <div className="search-modal__divider"></div>
             <div className="search-modal__input-wrap">
-              <i className="fa-solid fa-magnifying-glass"></i>
+              <span className="search-modal__input-icon"><SearchIcon name="search" size={18} /></span>
               <input ref={searchInputRef} type="text" placeholder="Pesquisar..." autoComplete="off" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-              {searchQuery && <button className="search-modal__clear" onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer', padding: 0, width: 'auto', height: 'auto', margin: 0 }}><i className="fa-solid fa-xmark"></i></button>}
+              {searchQuery && <button className="search-modal__clear" onClick={() => setSearchQuery('')} aria-label="Limpar busca"><SearchIcon name="x" size={16} /></button>}
             </div>
             <div className="search-modal__divider"></div>
             <div className="search-modal__nav">
               <button className={`search-modal__nav-item ${searchFilter === 'recomendados' ? 'is-active' : ''}`} onClick={() => setSearchFilter('recomendados')}>
-                <i className="fa-solid fa-star"></i> Recomendados
+                <SearchIcon name="star" size={14} /> Recomendados
               </button>
               <button className={`search-modal__nav-item ${searchFilter === 'eventos' ? 'is-active' : ''}`} onClick={() => setSearchFilter('eventos')}>
-                <i className="fa-solid fa-calendar-days"></i> Eventos
+                <SearchIcon name="calendar" size={14} /> Eventos
               </button>
             </div>
             <div className="search-modal__results">

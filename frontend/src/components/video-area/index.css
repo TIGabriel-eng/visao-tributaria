@@ -124,7 +124,8 @@
   display: flex;
   flex-direction: row;
   min-height: calc(100vh - 3px);
-  overflow: hidden;
+  /* clip (e não hidden) para não criar um container de rolagem e o sticky da sidebar continuar funcionando */
+  overflow: clip;
 }
 
 /* ── SIDEBAR ── */
@@ -162,8 +163,8 @@
   outline: none;
 }
 .va-sidebar__logo img {
-  width: 150px;
-  height: 150px;
+  width: 210px;
+  height: 210px;
   object-fit: contain;
   margin-top: 30px;
 }
@@ -451,6 +452,32 @@
 }
 
 /* ── COMPLETED OVERLAY ── */
+/* Tela própria ao terminar o vídeo: cobre o end screen do YouTube (Mais vídeos / miniaturas) */
+.va-yt-end {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0b0604;
+  animation: vaFadeIn 0.4s ease;
+}
+.va-yt-end__replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  background: #3d1e0d;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.va-yt-end__replay:hover { background: #512614; }
+
 .va-completed-overlay {
   position: absolute;
   inset: 0;
@@ -500,49 +527,6 @@
 @keyframes vaFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-/* ── TAB PAUSE OVERLAY ── */
-.va-tab-pause-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 45;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.75);
-  animation: vaFadeIn 0.3s ease;
-  pointer-events: none;
-}
-.va-tab-pause-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  background: rgba(15,23,42,0.95);
-  border: 1px solid rgba(245,158,11,0.3);
-  padding: 20px 32px;
-  border-radius: 14px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  animation: vaBadgePop 0.35s cubic-bezier(0.2,1.4,0.4,1);
-}
-.va-tab-pause-badge__icon {
-  width: 44px;
-  height: 44px;
-  background: rgba(245,158,11,0.15);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #f59e0b;
-  font-size: 1.1rem;
-}
-.va-tab-pause-badge__text {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #e5e7eb;
-  letter-spacing: 0.02em;
-  text-align: center;
 }
 
 /* ── LOADING ── */
@@ -851,7 +835,7 @@
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .va-tab:hover { color: #191919; }
-.va-tab.active { color: #f59e0b; border-bottom-color: #f59e0b; }
+.va-tab.active { color: #fff; border-bottom-color: #fff; }
 
 .va-tab-content {
   padding: 20px 24px;
@@ -955,19 +939,19 @@
 }
 .va-star {
   font-size: 1.1rem;
-  color: #c9a15c;
+  color: #8a5a2b;
   cursor: default;
   transition: color 0.1s ease, transform 0.1s ease;
   line-height: 1;
 }
-.va-star.lit { color: #f59e0b; }
+.va-star.lit { color: #3d1e0d; }
 .va-star.clickable { cursor: pointer; }
 .va-star.clickable:hover { transform: scale(1.2); }
 .va-rating__label {
   font-size: 0.8rem;
   color: #6b5c41;
 }
-.va-rating__label strong { color: #f59e0b; }
+.va-rating__label strong { color: #3d1e0d; }
 
 .va-review-composer {
   background: #f3edde;
@@ -1451,6 +1435,8 @@
     border-bottom: 1px solid rgba(61,30,13,0.15);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    /* Espaço para o botão de menu fixo (.va-hamburger), que fica por cima da barra */
+    padding-left: 60px;
   }
   .va-mobile-tabs::-webkit-scrollbar { display: none; }
   .va-mobile-tabs__btn {
@@ -1472,8 +1458,8 @@
   }
   .va-mobile-tabs__btn i { font-size: 1rem; }
   .va-mobile-tabs__btn.active {
-    color: #f59e0b;
-    border-bottom-color: #f59e0b;
+    color: #fff;
+    border-bottom-color: #fff;
   }
 
   .va-mobile-aulas {

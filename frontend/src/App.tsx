@@ -17,6 +17,7 @@ import { MeuPerfilPage } from './pages/MeuPerfilPage';
 import { CertificadosPage } from './pages/CertificadosPage';
 import { NotificacoesPage } from './pages/NotificacoesPage';
 import { VideoAreaPage } from './pages/VideoAreaPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { CookieConsent } from './components/CookieConsent';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -55,6 +56,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
         <Route path="/video-area/:cursoSlug" element={
           <ProtectedRoute>
             <VideoAreaPage />

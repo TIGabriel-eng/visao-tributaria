@@ -24,7 +24,7 @@ export function CookieConsent() {
     <div className="cookie-consent" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
       <div className="cookie-consent__content">
         <p>
-          Este site usa cookies para garantir o funcionamento da plataforma e melhorar sua experiência.
+          Este site guarda no seu navegador (armazenamento local) as informações necessárias para o login e as suas preferências.
           Os vídeos hospedados no YouTube só são carregados após a sua autorização.
         </p>
         <div className="cookie-consent__actions">
